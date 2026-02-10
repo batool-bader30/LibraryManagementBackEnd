@@ -2,88 +2,87 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LibraryManagement.data;
 using LibraryManagement.DTO;
-using LibraryManagement.models;
+using LibraryManagement.Handlers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using static LibraryManagement.command.AuthorCommands;
+using static LibraryManagement.query.AuthorQuerys;
 
 namespace LibraryManagement.controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api")]
     public class AuthorController : ControllerBase
     {
-        private readonly addDBcontext _context;
+        private readonly IMediator _mediator;
 
-        // نستخدم الـ Constructor لجلب الـ DbContext الذي ربطناه سابقاً
-        public AuthorController(addDBcontext context)
+        public AuthorController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
-        [HttpPost("postauthor")]
-     public async Task<IActionResult> PostAuthor([FromBody] AuthorDto authorDto)
-{
-    if (await _context.Authors.AnyAsync(a => a.Name == authorDto.Name))
-    {
-        return BadRequest("Author already exists!");
-    }
-
-    var author = new Authormodel
-    {
-        Name = authorDto.Name,
-        Bio = authorDto.Bio
-    };
-
-    await _context.Authors.AddAsync(author);
-    await _context.SaveChangesAsync();
-    return Ok(author);
-}
-
-        [HttpGet("getauthor")]
-        public async Task<IActionResult> GetAuthors()
+        // ======================
+        // GET AUTHORS BY NAME
+        // ====================== 
+        [HttpGet("GetAuthorsByName/{name}")]
+        public async Task<IActionResult> GetByName(string name)
         {
-             if (!await _context.Authors.AnyAsync())
+            var result = await _mediator.Send(new GetAuthorsByNameQuery(name));
+
+            if (result.Count == 0)
+                return NotFound("Author not found");
+
+            return Ok(result);
+        }
+        // ======================
+        // GET ALL AUTHORS
+        // ====================== 
+        [HttpGet("GetAllAuthors")]
+        public async Task<IActionResult> GetAllAuthors()
+        {
+            var result = await _mediator.Send(new GetAllAuthorsQuery());
+
+            if (result.Count == 0)
+                return NotFound("No Authors found");
+
+            return Ok(result);
+        }
+        // ======================
+        // CREATE AUTHORS
+        // ======================
+        [HttpPost("CreateAuthor")]
+        public async Task<IActionResult> CreateAuthor([FromBody] AuthorDto authorDto)
+        {
+            if (string.IsNullOrWhiteSpace(authorDto.Name))
+                return BadRequest("Author name is required");
+
+            try
             {
-                return BadRequest("No Authors exists!");
+                var result = await _mediator.Send(new CreateAuthorCommand(authorDto));
+                return Ok(new { AuthorId = result });
             }
-            else{
-          var Authors= await _context.Authors.ToListAsync();
-          
-          return Ok(Authors);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("getauthorbyname")]
-        public async Task<IActionResult> GetAuthorbyname(string name)
+        // ======================
+        // DELETE AUTHORS BY ID
+        // ======================
+        [HttpDelete("DeleteAuthorById/{id}")]
+        public async Task<IActionResult> DeleteAuthorById(int id)
         {
-                var authors = await _context.Authors.Where(a => a.Name == name)
-                                .ToListAsync();;
+            var result = await _mediator.Send(new DeleteAuthorByIdCommand(id));
 
-              if (authors.Count==0)
-            {
-                return BadRequest(name+ " not found!");
-            }
-            else{
-          
-          return Ok(authors);
-            }
+            if (!result)
+                return NotFound("Author not found");
+
+            return Ok("Author deleted successfully");
         }
-       [HttpDelete("deleteauthor/{id}")]
-        public async Task<IActionResult> DeletAuthorbyid(int id)
-        {
-            var Author=await _context.Authors.FindAsync(id);
-             if (Author==null)
-            {
-                return BadRequest("Author not found!");
-            }
-            else{
-           _context.Authors.Remove(Author);
-           await _context.SaveChangesAsync();
-          return Ok(Author.Name+" was deleted");
-            }
-        }
+
+
+        
     }
 }

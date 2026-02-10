@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 namespace LibraryManagement.DTO
 {
    
-        public class BookDetailsDto
+    public class GetBooksDto
 {
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public double Price { get; set; }
-    public int PublishYear { get; set; }
-    public string ISBN { get; set; }
-    public int AuthorId { get; set; }
+    public required string Title { get; set; }
+    public  required string Description { get; set; }
+    public required double Price { get; set; }
+    public required int PublishYear { get; set; }
+    public required string ISBN { get; set; }
+    public required int AuthorId { get; set; }
 
-    public string? ImageUrl { get; set; } // 👈 رابط الصورة
+    public IFormFile? ImageUrl { get; set; } 
 
     }
 }

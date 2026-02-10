@@ -8,11 +8,11 @@ namespace LibraryManagement.DTO
 {
    
     
-        public class AuthorDto
+  public class AuthorDto
 {
-    [Required]
-    public string Name { get; set; }=string.Empty;
-    public string? Bio { get; set; }
+    
+    public required string Name { get; set; }
+    public required string Bio { get; set; }
 }
 
     

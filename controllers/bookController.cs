@@ -2,180 +2,86 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LibraryManagement.data;
 using LibraryManagement.DTO;
-using LibraryManagement.models;
+using LibraryManagement.Handlers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using static LibraryManagement.command.AuthorCommands;
+using static LibraryManagement.CQRS.command.BookCommands;
+using static LibraryManagement.query.AuthorQuerys;
 
 namespace LibraryManagement.controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api")]
     public class BookController : ControllerBase
     {
-        private readonly addDBcontext _context;
+        private readonly IMediator _mediator;
 
-        public BookController(addDBcontext context)
+        public BookController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
-        // ============================
-        // POST: Add Book with Image
-        // ============================
-        [HttpPost("postbook")]
-        public async Task<IActionResult> PostBook([FromForm] CreateBookDto book)
+        // // ======================
+        // // GET AUTHORS BY NAME
+        // // ====================== 
+        // [HttpGet("GetAuthorsByName/{name}")]
+        // public async Task<IActionResult> GetByName(string name)
+        // {
+        //     var result = await _mediator.Send(new GetAuthorsByNameQuery(name));
+
+        //     if (result.Count == 0)
+        //         return NotFound("Author not found");
+
+        //     return Ok(result);
+        // }
+        // // ======================
+        // // GET ALL AUTHORS
+        // // ====================== 
+        // [HttpGet("GetAllAuthors")]
+        // public async Task<IActionResult> GetAllAuthors()
+        // {
+        //     var result = await _mediator.Send(new GetAllAuthorsQuery());
+
+        //     if (result.Count == 0)
+        //         return NotFound("No Authors found");
+
+        //     return Ok(result);
+        // }
+        // ======================
+        // CREATE AUTHORS
+        // ======================
+        [HttpPost("CreateBook")]
+        public async Task<IActionResult> CreateBook([FromForm] CreateBookDto bookDto)
         {
-            if (await _context.Books.AnyAsync(b => b.ISBN == book.ISBN))
-                return BadRequest("Book with this ISBN already exists!");
-
-            if (!await _context.Authors.AnyAsync(a => a.Id == book.AuthorId))
-                return BadRequest("Author not found!");
-
-            var newBook = new Bookmodel
+           
+            try
             {
-                Title = book.Title,
-                Description = book.Description,
-                Price = book.Price,
-                PublishYear = book.PublishYear,
-                ISBN = book.ISBN,
-                AuthorId = book.AuthorId
-            };
-
-            if (book.ImageUrl != null)
-            {
-                using var ms = new MemoryStream();
-                await book.ImageUrl.CopyToAsync(ms);
-                newBook.ImageUrl = ms.ToArray();
+                var result = await _mediator.Send(new CreateBookCommand(bookDto));
+                return Ok(new { bookId = result });
             }
-
-            await _context.Books.AddAsync(newBook);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
+            catch (Exception ex)
             {
-                newBook.Id,
-                newBook.Title
-            });
+                return BadRequest(ex.Message);
+            }
         }
 
-        // ============================
-        // GET: All Books (with image URL)
-        // ============================
-        [HttpGet("getbooks")]
-        public async Task<IActionResult> GetBooks()
-        {
-            var books = await _context.Books
-                .Select(b => new BookDetailsDto
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    Description = b.Description,
-                    Price = b.Price,
-                    PublishYear = b.PublishYear,
-                    ISBN = b.ISBN,
-                    AuthorId = b.AuthorId,
-                    ImageUrl = b.ImageUrl != null
-                        ? $"{Request.Scheme}://{Request.Host}/api/book/{b.Id}/image"
-                        : null
-                })
-                .ToListAsync();
+        // // ======================
+        // // DELETE AUTHORS BY ID
+        // // ======================
+        // [HttpDelete("DeleteAuthorById/{id}")]
+        // public async Task<IActionResult> DeleteAuthorById(int id)
+        // {
+        //     var result = await _mediator.Send(new DeleteAuthorByIdCommand(id));
 
-            if (!books.Any())
-                return NotFound("No books exist!");
+        //     if (!result)
+        //         return NotFound("Author not found");
 
-            return Ok(books);
-        }
+        //     return Ok("Author deleted successfully");
+        // }
 
 
-        // ============================
-        // GET: Book Image
-        // ============================
-        [HttpGet("{id}/image")]
-        public IActionResult GetBookImage(int id)
-        {
-            var book = _context.Books.Find(id);
-
-            if (book == null || book.ImageUrl == null)
-                return NotFound();
-
-            return File(book.ImageUrl, "image/*");
-        }
-
-        // ============================
-        // GET: Books by Name
-        // ============================
-        [HttpGet("GetBooksByName")]
-        public async Task<IActionResult> GetBooksByName(string name)
-        {
-            var books = await _context.Books
-                .Where(b => b.Title == name)
-                .Select(b => new BookDetailsDto
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    Description = b.Description,
-                    Price = b.Price,
-                    PublishYear = b.PublishYear,
-                    ISBN = b.ISBN,
-                    AuthorId = b.AuthorId,
-                    ImageUrl = b.ImageUrl != null
-                        ? $"{Request.Scheme}://{Request.Host}/api/book/{b.Id}/image"
-                        : null
-                })
-                .ToListAsync();
-
-            if (!books.Any())
-                return NotFound($"{name} not found!");
-
-            return Ok(books);
-        }
-
-        // ============================
-        // GET: Books by Name
-        // ============================
-        [HttpGet("GetBooksByAuthorName")]
-        public async Task<IActionResult> GetBooksByAuthorName(string name)
-        {
-            var books = await _context.Books
-                .Where(b => b.Author.Name.Contains(name))
-                .Select(b => new BookDetailsDto
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    Description = b.Description,
-                    Price = b.Price,
-                    PublishYear = b.PublishYear,
-                    ISBN = b.ISBN,
-                    AuthorId = b.AuthorId,
-                    ImageUrl = b.ImageUrl != null
-                        ? $"{Request.Scheme}://{Request.Host}/api/book/{b.Id}/image"
-                        : null
-                })
-                .ToListAsync();
-
-            if (!books.Any())
-                return NotFound($"{name} not found!");
-
-            return Ok(books);
-        }
-
-        // ============================
-        // DELETE: Book by Id
-        // ============================
-        [HttpDelete("DeleteBook/{id}")]
-        public async Task<IActionResult> DeleteBookById(int id)
-        {
-            var book = await _context.Books.FindAsync(id);
-
-            if (book == null)
-                return NotFound("Book Not Found");
-
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-
-            return Ok($"{book.Title} was deleted");
-        }
+        
     }
 }

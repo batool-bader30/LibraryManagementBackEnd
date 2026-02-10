@@ -9,17 +9,22 @@ using static LibraryManagement.query.AuthorQuerys;
 
 namespace LibraryManagement.Handlers
 {
-public class GetAuthorsByNameQueryHandler:IRequestHandler<GetAuthorsByNameQuery,List<Authormodel>>
+    public class GetAuthorsByNameQueryHandler : IRequestHandler<GetAuthorsByNameQuery, List<AuthorModel>>
     {
-         private readonly IAuthorRepository _repo;
+        private readonly IAuthorRepository _repo;
 
-    public GetAuthorsByNameQueryHandler(IAuthorRepository repo)
-    {
-        _repo = repo;
-    }
-     public async Task<List<Authormodel>> Handle(GetAuthorsByNameQuery request, CancellationToken ct)
-    {
-        return await _repo.GetAuthorByNameAsync(request.Name);
-    }
+        public GetAuthorsByNameQueryHandler(IAuthorRepository repo)
+        {
+            _repo = repo;
+        }
+        public async Task<List<AuthorModel>> Handle(GetAuthorsByNameQuery request, CancellationToken ct)
+        {
+             var authors =await _repo.GetAuthorByNameAsync(request.Name);
+            if (authors.Count == 0)
+            {
+                throw new Exception("author not exists!");
+            }
+            return authors;
+        }
     }
 }

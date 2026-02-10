@@ -5,18 +5,20 @@ using MediatR;
 using System.Reflection;
 using LibraryManagement.Repositories.Interfaces;
 using LibraryManagement.Repository.Implementation;
+using LibraryManagement.Repository.Interface;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddDbContext<addDBcontext>(Options=>Options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
+builder.Services.AddDbContext<addDBcontext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(typeof(Program));
-builder.Services.AddScoped<IAuthorRepository, AuthorRepo>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -26,7 +28,7 @@ if (app.Environment.IsDevelopment())
    app.MapSwagger();
    app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

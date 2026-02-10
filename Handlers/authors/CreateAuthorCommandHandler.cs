@@ -24,7 +24,7 @@ namespace LibraryManagement.Handlers
             if (result != null && result.Count > 0)
                 throw new Exception("Author already exists!");
 
-            var author = new Authormodel
+            var author = new AuthorModel
             {
                 Name = request.Author.Name,
                 Bio = request.Author.Bio

@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.data
 {
-    public class addDBcontext:DbContext
+    public class addDBcontext : DbContext
     {
-        public addDBcontext(DbContextOptions <addDBcontext> options):base(options)
-        {}
-        public DbSet<Authormodel> Authors { get; set; }
-        public DbSet<Bookmodel> Books { get; set; }
-    
+        public addDBcontext(DbContextOptions<addDBcontext> options) : base(options)
+        { }
+        public DbSet<AuthorModel> Authors { get; set; }
+        public DbSet<BookModel> Books { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
+
     }
 }

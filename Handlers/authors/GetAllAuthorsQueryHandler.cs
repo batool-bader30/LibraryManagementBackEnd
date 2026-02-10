@@ -8,7 +8,7 @@ using static LibraryManagement.query.AuthorQuerys;
 
 namespace LibraryManagement.Handlers
 {
-    public class GetAllAuthorsQueryHandler : IRequestHandler<GetAllAuthorsQuery, List<Authormodel>>
+    public class GetAllAuthorsQueryHandler : IRequestHandler<GetAllAuthorsQuery, List<AuthorModel>>
     {
         private readonly IAuthorRepository _repo;
 
@@ -17,9 +17,14 @@ namespace LibraryManagement.Handlers
             _repo = repo;
         }
 
-        public async Task<List<Authormodel>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
+        public async Task<List<AuthorModel>> Handle(GetAllAuthorsQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAuthorsAsync();
+            var authors =await _repo.GetAuthorsAsync();
+            if (authors.Count == 0)
+            {
+                throw new Exception("no authors exists!");
+            }
+            return authors;
         }
     }
 }
