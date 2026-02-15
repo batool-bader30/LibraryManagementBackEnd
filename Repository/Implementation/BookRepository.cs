@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LibraryManagement.data;
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +11,9 @@ namespace LibraryManagement.Repository.Implementation
 {
     public class BookRepository : IBookRepository
     {
-        private readonly addDBcontext _context;
+        private readonly AppDBcontext _context;
 
-        public BookRepository(addDBcontext context)
+        public BookRepository(AppDBcontext context)
         {
             _context = context;
         }

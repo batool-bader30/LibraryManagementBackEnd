@@ -1,4 +1,4 @@
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
 using static LibraryManagement.command.CategoryCommands;
@@ -16,17 +16,40 @@ namespace LibraryManagement.Handlers
 
         public async Task<int> Handle(CreateCategoryCommand request, CancellationToken ct)
         {
-            var exist = await _repo.GetCategoryByNameAsync(request.Category.Name);
-            if (exist.Any())
-                throw new Exception("Category already exists");
-
-            var category = new CategoryModel
+            try
             {
-                Name = request.Category.Name
-            };
+                Console.WriteLine("Handler: Start handling CreateCategoryCommand");
 
-            await _repo.CreateCategory(category);
-            return category.Id;
+                if (request.Category == null)
+                {
+                    Console.WriteLine("Handler Error: Category DTO is null");
+                    throw new Exception("Category DTO is null");
+                }
+
+                Console.WriteLine($"Handler: DTO Name = {request.Category.Name}");
+
+                var exist = await _repo.GetCategoryByNameAsync(request.Category.Name);
+                if (exist.Any())
+                {
+                    Console.WriteLine("Handler Error: Category already exists");
+                    throw new Exception("Category already exists");
+                }
+
+                var category = new CategoryModel
+                {
+                    Name = request.Category.Name
+                };
+
+                await _repo.CreateCategory(category);
+                Console.WriteLine($"Handler: Category created with ID = {category.Id}");
+
+                return category.Id;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Handler Exception: {ex.Message}");
+                throw;
+            }
         }
     }
 }

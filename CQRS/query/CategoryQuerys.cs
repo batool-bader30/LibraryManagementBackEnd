@@ -1,4 +1,4 @@
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using MediatR;
 
 namespace LibraryManagement.query

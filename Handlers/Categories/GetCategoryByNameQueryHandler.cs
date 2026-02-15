@@ -1,4 +1,4 @@
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
 using static LibraryManagement.query.CategoryQueries;
@@ -19,7 +19,7 @@ namespace LibraryManagement.Handlers
             var books = await _repo.GetCategoryByNameAsync(request.Name);
 
             if (books == null || books.Count == 0)
-                throw new Exception("Book not found"); 
+                throw new Exception("Book not found");
 
             return books;
         }

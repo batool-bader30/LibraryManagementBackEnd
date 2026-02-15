@@ -1,5 +1,5 @@
 using LibraryManagement.data;
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +7,9 @@ namespace LibraryManagement.Repository.Implementation
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly addDBcontext _context;
+        private readonly AppDBcontext _context;
 
-        public CategoryRepository(addDBcontext context)
+        public CategoryRepository(AppDBcontext context)
         {
             _context = context;
         }

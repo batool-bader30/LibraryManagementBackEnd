@@ -1,13 +1,17 @@
+using System.ComponentModel.DataAnnotations;
 using LibraryManagement.DTO;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static LibraryManagement.command.CategoryCommands;
 using static LibraryManagement.query.CategoryQueries;
 
 namespace LibraryManagement.controllers
 {
+    
+     [Route("api")]
     [ApiController]
-    [Route("api")]
+   
     public class CategoryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -31,19 +35,25 @@ namespace LibraryManagement.controllers
             return result.Count == 0 ? NotFound() : Ok(result);
         }
 
-        [HttpPost("CreateCategory")]
-        public async Task<IActionResult> Create(CategoryDto dto)
-        {
-            try
-            {
-                var id = await _mediator.Send(new CreateCategoryCommand(dto));
-                return Ok(new { CategoryId = id });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+       [HttpPost("CreateCategory")]
+public async Task<IActionResult> Create(CategoryDto dto)
+{
+    Console.WriteLine($"IsAuthenticated: {User.Identity?.IsAuthenticated}");
+    Console.WriteLine($"User Name: {User.Identity?.Name}");
+
+    try
+    {
+        var id = await _mediator.Send(new CreateCategoryCommand(dto));
+        return Ok(new { CategoryId = id });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { Message = ex.Message });
+    }
+}
+
+
+
 
         [HttpDelete("DeleteCategoryById/{id}")]
         public async Task<IActionResult> Delete(int id)

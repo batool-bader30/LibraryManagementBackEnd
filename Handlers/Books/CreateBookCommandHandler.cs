@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repository.Interface;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +14,7 @@ namespace LibraryManagement.Handlers.Books
 {
     public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, int>
     {
-         private readonly IBookRepository _repo;
+        private readonly IBookRepository _repo;
 
         public CreateBookCommandHandler(IBookRepository repo)
         {
@@ -27,8 +27,8 @@ namespace LibraryManagement.Handlers.Books
             if (result != null && result.Count > 0)
                 throw new Exception("Book already exists!");
 
-          
-           var book = new BookModel
+
+            var book = new BookModel
             {
                 Title = request.Book.Title,
                 Description = request.Book.Description,
@@ -48,7 +48,7 @@ namespace LibraryManagement.Handlers.Books
             await _repo.CreateBook(book);
 
             return book.Id;
-            
+
         }
     }
 }

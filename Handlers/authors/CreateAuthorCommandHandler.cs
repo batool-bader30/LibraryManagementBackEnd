@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
 using static LibraryManagement.command.AuthorCommands;

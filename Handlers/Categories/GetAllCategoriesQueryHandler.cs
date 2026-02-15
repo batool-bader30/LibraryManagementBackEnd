@@ -1,4 +1,4 @@
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
 using static LibraryManagement.query.CategoryQueries;
@@ -16,7 +16,7 @@ namespace LibraryManagement.Handlers
 
         public async Task<List<CategoryModel>> Handle(GetAllCategoriesQuery request, CancellationToken ct)
         {
-            var books =await _repo.GetAllCategoriesAsync();
+            var books = await _repo.GetAllCategoriesAsync();
             if (books.Count == 0)
             {
                 throw new Exception("No Books exists!");

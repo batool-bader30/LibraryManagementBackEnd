@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LibraryManagement.Migrations
 {
-    [DbContext(typeof(addDBcontext))]
+    [DbContext(typeof(AppDBcontext))]
     [Migration("20260210200843_InitialCreate")]
     partial class InitialCreate
     {
@@ -25,7 +25,7 @@ namespace LibraryManagement.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("LibraryManagement.models.AuthorModel", b =>
+            modelBuilder.Entity("LibraryManagement.Models.AuthorModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace LibraryManagement.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("LibraryManagement.models.BookModel", b =>
+            modelBuilder.Entity("LibraryManagement.Models.BookModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace LibraryManagement.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("LibraryManagement.models.CategoryModel", b =>
+            modelBuilder.Entity("LibraryManagement.Models.CategoryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,27 +105,27 @@ namespace LibraryManagement.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("LibraryManagement.models.BookModel", b =>
+            modelBuilder.Entity("LibraryManagement.Models.BookModel", b =>
                 {
-                    b.HasOne("LibraryManagement.models.AuthorModel", "Author")
+                    b.HasOne("LibraryManagement.Models.AuthorModel", "Author")
                         .WithMany("books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryManagement.models.CategoryModel", null)
+                    b.HasOne("LibraryManagement.Models.CategoryModel", null)
                         .WithMany("Books")
                         .HasForeignKey("CategoryModelId");
 
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("LibraryManagement.models.AuthorModel", b =>
+            modelBuilder.Entity("LibraryManagement.Models.AuthorModel", b =>
                 {
                     b.Navigation("books");
                 });
 
-            modelBuilder.Entity("LibraryManagement.models.CategoryModel", b =>
+            modelBuilder.Entity("LibraryManagement.Models.CategoryModel", b =>
                 {
                     b.Navigation("Books");
                 });

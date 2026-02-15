@@ -6,34 +6,58 @@ using System.Reflection;
 using LibraryManagement.Repositories.Interfaces;
 using LibraryManagement.Repository.Implementation;
 using LibraryManagement.Repository.Interface;
+using Microsoft.AspNetCore.Identity;
+using LibraryManagement.Models;
+using LibraryManagement.Extentions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddDbContext<addDBcontext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
-builder.Services.AddSwaggerGen();
+
+// Configure DbContext
+builder.Services.AddDbContext<AppDBcontext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
+
+// Swagger & JWT
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGenJwtAuth();
+builder.Services.AddCustomJwtAuth(builder.Configuration);
+
+// MediatR
 builder.Services.AddMediatR(typeof(Program));
+
+// Repositories
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Identity
+builder.Services.AddIdentity<UserModel, IdentityRole>()
+    .AddEntityFrameworkStores<AppDBcontext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger UI
 if (app.Environment.IsDevelopment())
 {
-   app.MapSwagger();
-   app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+// Static files
 app.UseStaticFiles();
+
+// HTTPS redirection
 app.UseHttpsRedirection();
+
+
+// Authentication must come before Authorization
+app.UseAuthentication();
 app.UseAuthorization();
+
+// Map controllers
 app.MapControllers();
 
-
 app.Run();
-
-

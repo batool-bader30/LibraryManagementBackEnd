@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LibraryManagement.data;
 using LibraryManagement.DTO;
-using LibraryManagement.models;
+using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +13,9 @@ namespace LibraryManagement.Repository.Implementation
 {
     public class AuthorRepository : IAuthorRepository
     {
-        private readonly addDBcontext _context;
+        private readonly AppDBcontext _context;
 
-        public AuthorRepository(addDBcontext context)
+        public AuthorRepository(AppDBcontext context)
         {
             _context = context;
         }

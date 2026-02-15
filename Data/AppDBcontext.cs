@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LibraryManagement.models;
+using LibraryManagement.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.data
 {
-    public class addDBcontext : DbContext
+    public class AppDBcontext
+        : IdentityDbContext<UserModel>
     {
-        public addDBcontext(DbContextOptions<addDBcontext> options) : base(options)
+        public AppDBcontext(DbContextOptions<AppDBcontext> options)
+         : base(options)
         { }
         public DbSet<AuthorModel> Authors { get; set; }
         public DbSet<BookModel> Books { get; set; }

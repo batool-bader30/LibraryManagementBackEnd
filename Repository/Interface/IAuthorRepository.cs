@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-using LibraryManagement.models;
 using LibraryManagement.DTO;
+using LibraryManagement.Models;
 
 namespace LibraryManagement.Repositories.Interfaces
 {

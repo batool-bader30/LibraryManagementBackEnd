@@ -1,4 +1,4 @@
-using LibraryManagement.models;
+using LibraryManagement.Models;
 
 namespace LibraryManagement.Repositories.Interfaces
 {
