@@ -28,29 +28,23 @@ builder.Services.AddDbContext<AppDBcontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 
 // 3. Swagger & JWT (إعداداتك الخاصة)
+// 3. Swagger & JWT (إعداداتك الخاصة)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenJwtAuth();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
-        ClockSkew = TimeSpan.Zero
-    };
-});
-
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "http://localhost:5000",  
+            ValidAudience = "http://localhost:5000",  
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lhkjdgdgdkmdfk2554354657knknjbn@#$%^&k4jh245"))  // مفتاح سري قوي (32 حرفاً على الأقل)
+        };
+    });
 // 4. MediatR
 builder.Services.AddMediatR(typeof(Program));
 
@@ -95,9 +89,28 @@ builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.Ap
         return Task.CompletedTask;
     };
 });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+    
+    // قائمة الأدوار المطلوبة
+    string[] roles = { "User", "Admin" };
+    
+    foreach (var role in roles)
+    {
+        // تحقق إذا كان الدور موجوداً، وإلا أنشئه
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
 
 // 8. Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

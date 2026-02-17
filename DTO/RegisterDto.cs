@@ -14,5 +14,7 @@ namespace LibraryManagement.DTO
         public string email { get; set; }
 
         public string? phoneNumber { get; set; }
+                public string Role { get; set; } = "User";
+
     }
 }

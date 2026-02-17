@@ -11,6 +11,7 @@ namespace LibraryManagement.controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    
     public class CategoryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,6 +36,8 @@ namespace LibraryManagement.controllers
         }
 
         [HttpPost("CreateCategory")]
+            [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Create(CategoryDTO dto)
         {
 
@@ -54,6 +57,8 @@ namespace LibraryManagement.controllers
 
 
         [HttpDelete("DeleteCategoryById/{id}")]
+            [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new DeleteCategoryByIdCommand(id));

@@ -10,6 +10,7 @@ using static LibraryManagement.CQRS.command.BookCommands;
 namespace LibraryManagement.controllers
 {
     [Route("api/[controller]")]
+
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -58,6 +59,8 @@ namespace LibraryManagement.controllers
         }
 
         [HttpPost("AddBook")]
+            [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> AddBook([FromForm] CreateBookDTO dto)
         {
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
@@ -88,6 +91,8 @@ namespace LibraryManagement.controllers
         }
 
         [HttpPut("UpdateBook/{id}")]
+            [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> UpdateBook(int id, [FromForm] BookDTO dto)
         {
             // إذا تم رفع صورة جديدة أثناء التحديث
@@ -112,6 +117,8 @@ namespace LibraryManagement.controllers
         }
 
         [HttpDelete("DeleteBook/{id}")]
+            [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> DeleteBook(int id)
         {
             var result = await _mediator.Send(new BookCommands.DeleteBookByIdCommand(id));
