@@ -8,10 +8,9 @@ using static LibraryManagement.query.CategoryQueries;
 
 namespace LibraryManagement.controllers
 {
-    
-     [Route("api")]
+
+    [Route("api/[controller]")]
     [ApiController]
-   
     public class CategoryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,22 +34,21 @@ namespace LibraryManagement.controllers
             return result.Count == 0 ? NotFound() : Ok(result);
         }
 
-       [HttpPost("CreateCategory")]
-public async Task<IActionResult> Create(CategoryDto dto)
-{
-    Console.WriteLine($"IsAuthenticated: {User.Identity?.IsAuthenticated}");
-    Console.WriteLine($"User Name: {User.Identity?.Name}");
+        [HttpPost("CreateCategory")]
+        public async Task<IActionResult> Create(CategoryDTO dto)
+        {
 
-    try
-    {
-        var id = await _mediator.Send(new CreateCategoryCommand(dto));
-        return Ok(new { CategoryId = id });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new { Message = ex.Message });
-    }
-}
+
+            try
+            {
+                var id = await _mediator.Send(new CreateCategoryCommand(dto));
+                return Ok(new { CategoryId = id });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
 
 
 

@@ -9,8 +9,10 @@ namespace LibraryManagement.command
 {
     public static class AuthorCommands
     {
-        public record CreateAuthorCommand(AuthorDto Author) : IRequest<int>;
-             public record DeleteAuthorByIdCommand(int Id) :IRequest<bool>;
+        public record CreateAuthorCommand(AuthorDTO Author) : IRequest<int>;
+        public record DeleteAuthorByIdCommand(int Id) : IRequest<bool>;
+        public record UpdateAuthorCommand(int Id, AuthorDTO Author) : IRequest<bool>;
+
 
     }
 }

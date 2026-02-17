@@ -10,9 +10,10 @@ namespace LibraryManagement.CQRS.command
     public class BookCommands
     {
        
-        public record CreateBookCommand(CreateBookDto Book) : IRequest<int>;
+      
+        public record CreateBookCommand(CreateBookDTO Book) : IRequest<int>;
         public record DeleteBookByIdCommand(int Id) : IRequest<bool>;
-        public record DeleteBookByAuthorIdCommand(int Id) : IRequest<bool>;
+        public record UpdateBookCommand(int Id, BookDTO Book) : IRequest<bool>;
+    }
 
     }
-}

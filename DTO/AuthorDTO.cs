@@ -6,14 +6,24 @@ using System.Threading.Tasks;
 
 namespace LibraryManagement.DTO
 {
-   
-    
-  public class AuthorDto
+public class AuthorDTO
 {
-    
-    public required string Name { get; set; }
-    public required string Bio { get; set; }
+    public int Id { get; set; }
+    public string? Name { get; set; }
+        public string? Bio { get; set; }
+
 }
 
-    
+public class CreateAuthorDTO
+{
+    public string Name { get; set; }
+}
+
+public class UpdateAuthorDTO
+{
+    public string Name { get; set; }
+}
+
+
+
 }

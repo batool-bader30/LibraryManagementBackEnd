@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\5b364989-7b4b-4ce9-9324-96c1136393ad.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\5b364989-7b4b-4ce9-9324-96c1136393ad.jfif"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LibraryManagement.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.LibraryManagement.props",
+      "PackagePath": "build\\LibraryManagement.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.LibraryManagement.props",
+      "PackagePath": "buildMultiTargeting\\LibraryManagement.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.LibraryManagement.props",
+      "PackagePath": "buildTransitive\\LibraryManagement.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

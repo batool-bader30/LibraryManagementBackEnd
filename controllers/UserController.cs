@@ -1,96 +1,67 @@
 using LibraryManagement.DTO;
-using LibraryManagement.Models;
-using Microsoft.AspNetCore.Identity;
+using LibraryManagement.command;
+using LibraryManagement.query;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Threading.Tasks;
+using static LibraryManagement.command.UserCommands;
+using static LibraryManagement.query.UserQueries;
 
-namespace TestRESTAPI.Controllers
+namespace LibraryManagement.controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly UserManager<UserModel> _userManager;
-        private readonly IConfiguration _configuration;
+        private readonly IMediator _mediator;
 
-        public AccountController(UserManager<UserModel> userManager, IConfiguration configuration)
+        public UserController(IMediator mediator)
         {
-            _userManager = userManager;
-            _configuration = configuration;
+            _mediator = mediator;
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto user)
+       
+        [HttpGet("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var appUser = new UserModel
-            {
-                UserName = user.userName,
-                Email = user.email
-            };
-
-            var result = await _userManager.CreateAsync(appUser, user.password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(appUser, "Admin"); 
-            }
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
-                    ModelState.AddModelError("", error.Description);
-                return BadRequest(ModelState);
-            }
-
-            return Ok(new { Message = "User registered successfully" });
+            var users = await _mediator.Send(new UserQueries.GetAllUsersQuery());
+            return users.Count == 0 ? NotFound("No users found") : Ok(users);
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LogInDto login)
+       
+        [HttpGet("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var user = await _mediator.Send(new GetUserByIdQuery(id));
+            return user == null ? NotFound("User not found") : Ok(user);
+        }
 
-            var user = await _userManager.FindByNameAsync(login.userName);
-            if (user == null)
-                return Unauthorized("Invalid username or password");
+  
+        [HttpGet("GetUserByUserName/{username}")]
+        public async Task<IActionResult> GetUserByUserName(string username)
+        {
+            var user = await _mediator.Send(new UserQueries.GetUserByUserNameQuery(username));
+            return user == null ? NotFound("User not found") : Ok(user);
+        }
 
-            if (!await _userManager.CheckPasswordAsync(user, login.password))
-                return Unauthorized("Invalid username or password");
+        
+       
+        [HttpPut("UpdateUser/{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] RegisterDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            // Generate JWT
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            };
+            var result = await _mediator.Send(new UpdateUserCommand(id, dto));
+            return Ok(new { Message = result });
+        }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
-                claims.Add(new Claim(ClaimTypes.Role, role));
-
-            // Secret key must match exactly
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:Issuer"],
-                audience: _configuration["JWT:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(2),
-                signingCredentials: creds
-            );
-
-            return Ok(new
-            {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
-            });
+       
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var deleted = await _mediator.Send(new DeleteUserCommand(id));
+            return deleted ? Ok("User deleted successfully") : NotFound("User not found");
         }
     }
 }

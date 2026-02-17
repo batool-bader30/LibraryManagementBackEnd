@@ -4,6 +4,7 @@ using LibraryManagement.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(AppDBcontext))]
-    partial class addDBcontextModelSnapshot : ModelSnapshot
+    [Migration("20260217005338_AddIsAvailableToBook")]
+    partial class AddIsAvailableToBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +45,21 @@ namespace LibraryManagement.Migrations
                     b.ToTable("Authors");
                 });
 
+            modelBuilder.Entity("LibraryManagement.Models.BookCategoryModel", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("BookCategories");
+                });
+
             modelBuilder.Entity("LibraryManagement.Models.BookModel", b =>
                 {
                     b.Property<int>("Id")
@@ -53,24 +71,20 @@ namespace LibraryManagement.Migrations
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("ImageUrl")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("PublishYear")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -80,9 +94,43 @@ namespace LibraryManagement.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("CategoryModelId");
-
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("LibraryManagement.Models.BorrowingModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BorrowDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Borrowings");
                 });
 
             modelBuilder.Entity("LibraryManagement.Models.CategoryModel", b =>
@@ -100,6 +148,37 @@ namespace LibraryManagement.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("LibraryManagement.Models.ReviewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("LibraryManagement.Models.UserModel", b =>
@@ -300,6 +379,25 @@ namespace LibraryManagement.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LibraryManagement.Models.BookCategoryModel", b =>
+                {
+                    b.HasOne("LibraryManagement.Models.BookModel", "Book")
+                        .WithMany("BookCategories")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryManagement.Models.CategoryModel", "Category")
+                        .WithMany("BookCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("LibraryManagement.Models.BookModel", b =>
                 {
                     b.HasOne("LibraryManagement.Models.AuthorModel", "Author")
@@ -308,11 +406,45 @@ namespace LibraryManagement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryManagement.Models.CategoryModel", null)
-                        .WithMany("Books")
-                        .HasForeignKey("CategoryModelId");
-
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("LibraryManagement.Models.BorrowingModel", b =>
+                {
+                    b.HasOne("LibraryManagement.Models.BookModel", "Book")
+                        .WithMany("Borrowings")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryManagement.Models.UserModel", "User")
+                        .WithMany("Borrowings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LibraryManagement.Models.ReviewModel", b =>
+                {
+                    b.HasOne("LibraryManagement.Models.BookModel", "Book")
+                        .WithMany("Reviews")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryManagement.Models.UserModel", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -371,9 +503,25 @@ namespace LibraryManagement.Migrations
                     b.Navigation("books");
                 });
 
+            modelBuilder.Entity("LibraryManagement.Models.BookModel", b =>
+                {
+                    b.Navigation("BookCategories");
+
+                    b.Navigation("Borrowings");
+
+                    b.Navigation("Reviews");
+                });
+
             modelBuilder.Entity("LibraryManagement.Models.CategoryModel", b =>
                 {
-                    b.Navigation("Books");
+                    b.Navigation("BookCategories");
+                });
+
+            modelBuilder.Entity("LibraryManagement.Models.UserModel", b =>
+                {
+                    b.Navigation("Borrowings");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

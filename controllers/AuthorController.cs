@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LibraryManagement.DTO;
 using LibraryManagement.Handlers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static LibraryManagement.command.AuthorCommands;
 using static LibraryManagement.query.AuthorQuerys;
@@ -12,7 +13,7 @@ using static LibraryManagement.query.AuthorQuerys;
 namespace LibraryManagement.controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/[controller]")]
     public class AuthorController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -52,14 +53,14 @@ namespace LibraryManagement.controllers
         // CREATE AUTHORS
         // ======================
         [HttpPost("CreateAuthor")]
-        public async Task<IActionResult> CreateAuthor([FromBody] AuthorDto authorDto)
+        public async Task<IActionResult> CreateAuthor([FromBody] AuthorDTO AuthorDTO)
         {
-            if (string.IsNullOrWhiteSpace(authorDto.Name))
+            if (string.IsNullOrWhiteSpace(AuthorDTO.Name))
                 return BadRequest("Author name is required");
 
             try
             {
-                var result = await _mediator.Send(new CreateAuthorCommand(authorDto));
+                var result = await _mediator.Send(new CreateAuthorCommand(AuthorDTO));
                 return Ok(new { AuthorId = result });
             }
             catch (Exception ex)

@@ -5,21 +5,24 @@ namespace LibraryManagement.Models
 {
     public class BookModel
     {
-        [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string ISBN { get; set; }
+        public string ImageUrl { get; set; }
 
-        public string? Description { get; set; }
-        public double Price { get; set; }
-        public int PublishYear { get; set; }
-        public string ISBN { get; set; } = string.Empty;
+        public bool IsAvailable { get; set; } = true;
 
-          public byte[]? ImageUrl { get; set; } // تخزين الصورة مباشرة
-
+        // Author (One-to-Many)
         public int AuthorId { get; set; }
-        public AuthorModel? Author { get; set; }
+        public AuthorModel Author { get; set; }
+
+        // Many-to-Many with Category
+        public ICollection<BookCategoryModel> BookCategories { get; set; }
+
+        public ICollection<BorrowingModel> Borrowings { get; set; }
+        public ICollection<ReviewModel> Reviews { get; set; }
     }
 
 }

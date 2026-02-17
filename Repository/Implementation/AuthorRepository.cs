@@ -22,12 +22,18 @@ namespace LibraryManagement.Repository.Implementation
 
         public async Task<List<AuthorModel>> GetAuthorsAsync()
         {
-            return await _context.Authors.ToListAsync();
+            return await _context.Authors
+
+     .Include(a => a.books) 
+     .ToListAsync();
         }
 
         public async Task<List<AuthorModel>> GetAuthorByNameAsync(string name)
         {
-            return await _context.Authors.Where(a => a.Name.Contains(name)).ToListAsync();
+            return await _context.Authors
+     .Where(a => a.Name.Contains(name))
+     .Include(a => a.books)
+     .ToListAsync();
 
         }
         public async Task CreateAuthor(AuthorModel authormodel)

@@ -1,11 +1,77 @@
 {
   "Version": 1,
-  "Hash": "cCP/gZOcKai2J+n3lm9XjNtdC52QVovnmsAb7vYrofE=",
+  "Hash": "6UnOdISgqbZTBF3mq507waRI3iD6R8+rYHEvKjuKOsI=",
   "Source": "LibraryManagement",
   "BasePath": "_content/LibraryManagement",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "LibraryManagement\\wwwroot",
+      "Source": "LibraryManagement",
+      "ContentRoot": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\",
+      "BasePath": "_content/LibraryManagement",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\5b364989-7b4b-4ce9-9324-96c1136393ad.jfif",
+      "SourceId": "LibraryManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\",
+      "BasePath": "_content/LibraryManagement",
+      "RelativePath": "images/books/5b364989-7b4b-4ce9-9324-96c1136393ad.jfif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\books\\5b364989-7b4b-4ce9-9324-96c1136393ad.jfif"
+    },
+    {
+      "Identity": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif",
+      "SourceId": "LibraryManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\",
+      "BasePath": "_content/LibraryManagement",
+      "RelativePath": "images/books/b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif"
+    },
+    {
+      "Identity": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif",
+      "SourceId": "LibraryManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\",
+      "BasePath": "_content/LibraryManagement",
+      "RelativePath": "images/books/ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif"
+    }
+  ]
 }

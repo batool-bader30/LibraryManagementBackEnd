@@ -10,6 +10,6 @@ namespace LibraryManagement.Models
         [Required]
         public string Name { get; set; } = string.Empty;
 
-        public List<BookModel> Books { get; set; } = new();
+    public ICollection<BookCategoryModel> BookCategories { get; set; }
     }
 }
