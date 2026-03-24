@@ -17,6 +17,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+ builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
 // 1. Add services to the container.
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
@@ -27,7 +34,6 @@ builder.Services.AddControllers()
 builder.Services.AddDbContext<AppDBcontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 
-// 3. Swagger & JWT (إعداداتك الخاصة)
 // 3. Swagger & JWT (إعداداتك الخاصة)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenJwtAuth();
@@ -112,6 +118,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+
 // 8. Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -120,8 +128,9 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRouting();  
 
-app.UseRouting();        
+app.UseCors("AllowAll");      
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
