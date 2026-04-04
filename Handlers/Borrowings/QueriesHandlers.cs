@@ -1,57 +1,56 @@
 using LibraryManagement.Models;
 using LibraryManagement.Repository.Interface;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
-using static LibraryManagement.CQRS.Query.BorrowingQueries;
+using LibraryManagement.DTO;
+using static LibraryManagement.CQRS.Query.ReviewQueries;
 
 namespace LibraryManagement.query
 {
-    public class BorrowingQueryHandlers
+    public class BorrowingQueryHandlers : 
+        IRequestHandler<GetAllBorrowingsQuery, List<BorrowingResponseDTO>>,
+        IRequestHandler<GetBorrowingByIdQuery, BorrowingResponseDTO?>,
+        IRequestHandler<GetBorrowingsByUserIdQuery, List<BorrowingResponseDTO>>
     {
-        // Get All Borrowings
-        public class GetAllBorrowingsHandler : IRequestHandler<GetAllBorrowingsQuery, List<BorrowingModel>>
+        private readonly IBorrowingRepository _repo;
+        public BorrowingQueryHandlers(IBorrowingRepository repo) => _repo = repo;
+
+        public async Task<List<BorrowingResponseDTO>> Handle(GetAllBorrowingsQuery request, CancellationToken ct)
         {
-            private readonly IBorrowingRepository _repo;
-            public GetAllBorrowingsHandler(IBorrowingRepository repo) { _repo = repo; }
-            public async Task<List<BorrowingModel>> Handle(GetAllBorrowingsQuery request, CancellationToken cancellationToken)
-            {
-                return await _repo.GetAllBorrowingsAsync();
-            }
+            var data = await _repo.GetAllBorrowingsAsync();
+            return data.Select(Map).ToList();
         }
 
-        // Get Borrowing by Id
-        public class GetBorrowingByIdHandler : IRequestHandler<GetBorrowingByIdQuery, BorrowingModel>
+        public async Task<BorrowingResponseDTO?> Handle(GetBorrowingByIdQuery request, CancellationToken ct)
         {
-            private readonly IBorrowingRepository _repo;
-            public GetBorrowingByIdHandler(IBorrowingRepository repo) { _repo = repo; }
-            public async Task<BorrowingModel> Handle(GetBorrowingByIdQuery request, CancellationToken cancellationToken)
-            {
-                var borrowing = await _repo.GetBorrowingByIdAsync(request.Id);
-                if (borrowing == null) throw new ValidationException("Borrowing not found.");
-                return borrowing;
-            }
+            var b = await _repo.GetBorrowingByIdAsync(request.Id);
+            return b == null ? null : Map(b);
         }
 
-        // Get Borrowings by UserId
-        public class GetBorrowingsByUserIdHandler : IRequestHandler<GetBorrowingsByUserIdQuery, List<BorrowingModel>>
+        public async Task<List<BorrowingResponseDTO>> Handle(GetBorrowingsByUserIdQuery request, CancellationToken ct)
         {
-            private readonly IBorrowingRepository _repo;
-            public GetBorrowingsByUserIdHandler(IBorrowingRepository repo) { _repo = repo; }
-            public async Task<List<BorrowingModel>> Handle(GetBorrowingsByUserIdQuery request, CancellationToken cancellationToken)
-            {
-                return await _repo.GetBorrowingsByUserIdAsync(request.UserId);
-            }
+            var data = await _repo.GetBorrowingsByUserIdAsync(request.UserId);
+            return data.Select(Map).ToList();
         }
 
-        // Get Active Borrowings
-        public class GetActiveBorrowingsHandler : IRequestHandler<GetActiveBorrowingsQuery, List<BorrowingModel>>
+        private BorrowingResponseDTO Map(BorrowingModel b) => new BorrowingResponseDTO
         {
-            private readonly IBorrowingRepository _repo;
-            public GetActiveBorrowingsHandler(IBorrowingRepository repo) { _repo = repo; }
-            public async Task<List<BorrowingModel>> Handle(GetActiveBorrowingsQuery request, CancellationToken cancellationToken)
+            Id = b.Id,
+            BorrowDate = b.BorrowDate,
+            ReturnDate = b.ReturnDate,
+            Status = b.Status.ToString(),
+            Book = b.Book == null ? null : new BookSimpleDTO
             {
-                return await _repo.GetActiveBorrowingsAsync();
+                Id = b.Book.Id,
+                Title = b.Book.Title,
+                ImageUrl = b.Book.ImageUrl,
+                IsAvailable = b.Book.IsAvailable
+            },
+            User = b.User == null ? null : new UserSimpleDTO
+            {
+                Id = b.User.Id,
+                UserName = b.User.UserName,
+                Email = b.User.Email
             }
-        }
+        };
     }
 }

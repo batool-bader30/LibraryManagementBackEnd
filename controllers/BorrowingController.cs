@@ -1,11 +1,11 @@
-using LibraryManagement.Models;
 using LibraryManagement.command;
-using LibraryManagement.query;
+using LibraryManagement.CQRS.Query;
+using LibraryManagement.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static LibraryManagement.command.BorrowingCommands;
-using static LibraryManagement.CQRS.Query.BorrowingQueries;
-using LibraryManagement.DTO;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using static LibraryManagement.CQRS.Query.ReviewQueries;
 
 namespace LibraryManagement.controllers
 {
@@ -15,10 +15,7 @@ namespace LibraryManagement.controllers
     {
         private readonly IMediator _mediator;
 
-        public BorrowingController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public BorrowingController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("GetAllBorrowings")]
         public async Task<IActionResult> GetAllBorrowings()
@@ -35,43 +32,47 @@ namespace LibraryManagement.controllers
         }
 
         [HttpGet("GetBorrowingsByUser/{userId}")]
-        public async Task<IActionResult> GetBorrowingsByUser(int userId)
+        public async Task<IActionResult> GetBorrowingsByUser(string userId)
         {
             var result = await _mediator.Send(new GetBorrowingsByUserIdQuery(userId));
             return result.Count == 0 ? NotFound() : Ok(result);
         }
 
-        [HttpGet("GetActiveBorrowings")]
-        public async Task<IActionResult> GetActiveBorrowings()
-        {
-            var result = await _mediator.Send(new GetActiveBorrowingsQuery());
-            return result.Count == 0 ? NotFound() : Ok(result);
-        }
-
         [HttpPost("CreateBorrowing")]
-        public async Task<IActionResult> CreateBorrowing(BorrowingDTO borrowing)
+        public async Task<IActionResult> CreateBorrowing([FromBody] CreateBorrowingDTO dto)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var id = await _mediator.Send(new CreateBorrowingCommand(borrowing));
-            return Ok(new { BorrowingId = id });
+            try
+            {
+                // إرسال الطلب للـ Handler
+                var id = await _mediator.Send(new BorrowingCommands.CreateBorrowingCommand(dto));
+                return Ok(new { Message = "Borrowing created successfully", BorrowingId = id });
+            }
+            catch (System.ComponentModel.DataAnnotations.ValidationException ex)
+            {
+                // هنا نمسك خطأ "الكتاب غير متاح" ونرجعه كـ BadRequest مع الرسالة
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (System.Exception ex)
+            {
+                // لأي أخطاء أخرى غير متوقعة
+                return StatusCode(500, new { Error = "An unexpected error occurred", Details = ex.Message });
+            }
         }
 
         [HttpPut("UpdateBorrowing/{id}")]
-        public async Task<IActionResult> UpdateBorrowing(int id, BorrowingDTO borrowing)
+        public async Task<IActionResult> UpdateBorrowing(int id, [FromBody] UpdateBorrowingDTO dto)
         {
-            if (!ModelState.IsValid) 
-                return BadRequest(ModelState);
-
-            var result = await _mediator.Send(new UpdateBorrowingCommand(id, borrowing));
+            var result = await _mediator.Send(new BorrowingCommands.UpdateBorrowingCommand(id, dto));
             return result ? Ok("Updated") : NotFound();
         }
 
         [HttpDelete("DeleteBorrowing/{id}")]
         public async Task<IActionResult> DeleteBorrowing(int id)
         {
-            var result = await _mediator.Send(new DeleteBorrowingByIdCommand(id));
+            var result = await _mediator.Send(new BorrowingCommands.DeleteBorrowingByIdCommand(id));
             return result ? Ok("Deleted") : NotFound();
         }
     }

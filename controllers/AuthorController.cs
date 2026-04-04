@@ -9,13 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static LibraryManagement.command.AuthorCommands;
 using static LibraryManagement.query.AuthorQuerys;
-
 namespace LibraryManagement.controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-        [Authorize(Roles = "Admin")]
-
     public class AuthorController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -31,39 +28,52 @@ namespace LibraryManagement.controllers
         [HttpGet("GetAuthorsByName/{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
-            var result = await _mediator.Send(new GetAuthorsByNameQuery(name));
-
-            if (result.Count == 0)
-                return NotFound("Author not found");
-
-            return Ok(result);
+            try 
+            {
+                // الـ Result الآن هو List<AuthorDTO>
+                var result = await _mediator.Send(new GetAuthorsByNameQuery(name));
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
+
         // ======================
         // GET ALL AUTHORS
         // ====================== 
         [HttpGet("GetAllAuthors")]
         public async Task<IActionResult> GetAllAuthors()
         {
-            var result = await _mediator.Send(new GetAllAuthorsQuery());
-
-            if (result.Count == 0)
-                return NotFound("No Authors found");
-
-            return Ok(result);
+            try
+            {
+                // الـ Result هو List<AuthorDTO>
+                var result = await _mediator.Send(new GetAllAuthorsQuery());
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
+
         // ======================
         // CREATE AUTHORS
         // ======================
         [HttpPost("CreateAuthor")]
-        public async Task<IActionResult> CreateAuthor([FromBody] AuthorDTO AuthorDTO)
+        public async Task<IActionResult> CreateAuthor([FromBody] CreateAuthorDTO AuthorDTO)
         {
             if (string.IsNullOrWhiteSpace(AuthorDTO.Name))
                 return BadRequest("Author name is required");
 
             try
             {
+                // التعديل المهم: الـ result الآن هو AuthorResponseDTO كامل
                 var result = await _mediator.Send(new CreateAuthorCommand(AuthorDTO));
-                return Ok(new { AuthorId = result });
+                
+                // نرجع الكائن كامل لـ Flutter عشان يقدر يعرض الاسم والـ ID فوراً
+                return Ok(result); 
             }
             catch (Exception ex)
             {
@@ -82,10 +92,7 @@ namespace LibraryManagement.controllers
             if (!result)
                 return NotFound("Author not found");
 
-            return Ok("Author deleted successfully");
+            return Ok(new { message = "Author deleted successfully" });
         }
-
-
-        
     }
 }

@@ -1,3 +1,4 @@
+using LibraryManagement.DTO;
 using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
@@ -5,7 +6,7 @@ using static LibraryManagement.query.CategoryQueries;
 
 namespace LibraryManagement.Handlers
 {
-    public class GetCategoryByNameQueryHandler : IRequestHandler<GetCategoryByNameQuery, List<CategoryModel>>
+    public class GetCategoryByNameQueryHandler : IRequestHandler<GetCategoryByNameQuery, List<CategoryDTO>>
     {
         private readonly ICategoryRepository _repo;
 
@@ -14,14 +15,14 @@ namespace LibraryManagement.Handlers
             _repo = repo;
         }
 
-        public async Task<List<CategoryModel>> Handle(GetCategoryByNameQuery request, CancellationToken ct)
+        public async Task<List<CategoryDTO>> Handle(GetCategoryByNameQuery request, CancellationToken ct)
         {
-            var books = await _repo.GetCategoryByNameAsync(request.Name);
-
-            if (books == null || books.Count == 0)
-                throw new Exception("Book not found");
-
-            return books;
+            var categories = await _repo.GetCategoryByNameAsync(request.Name);
+            return categories.Select(c => new CategoryDTO
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
         }
     }
 }

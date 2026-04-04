@@ -1,4 +1,4 @@
-using LibraryManagement.Models;
+using LibraryManagement.DTO;
 using MediatR;
 using System.Collections.Generic;
 
@@ -6,8 +6,8 @@ namespace LibraryManagement.query
 {
     public static class UserQueries
     {
-        public record GetUserByIdQuery(string Id) : IRequest<UserModel?>;
-        public record GetUserByUserNameQuery(string UserName) : IRequest<UserModel?>;
-        public record GetAllUsersQuery() : IRequest<List<UserModel>>;
+        public record GetUserByIdQuery(string Id) : IRequest<UserSimpleDTO?>;
+        public record GetAllUsersQuery() : IRequest<List<UserSimpleDTO>>;
+        public record GetUserByUserNameQuery(string UserName) : IRequest<UserSimpleDTO?>;
     }
 }

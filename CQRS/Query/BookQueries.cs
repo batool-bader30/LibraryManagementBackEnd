@@ -1,18 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LibraryManagement.Models;
+using LibraryManagement.DTO;
 using MediatR;
+using System.Collections.Generic;
 
 namespace LibraryManagement.query
 {
-   public static class BookQueries
+    public static class BookQueries
     {
-        public record GetAllBooksQuery() : IRequest<List<BookModel>>;
-        public record GetBookByIdQuery(int Id) : IRequest<BookModel?>;
-        public record GetBooksByAuthorQuery(int AuthorId) : IRequest<List<BookModel>>;
-        public record GetBooksByCategoryQuery(int CategoryId) : IRequest<List<BookModel>>;
-        public record GetAvailableBooksQuery() : IRequest<List<BookModel>>;
+        // يرجع قائمة بسيطة (Id, Title, AuthorName, Image)
+        public record GetAllBooksQuery() : IRequest<List<BookSimpleDTO>>;
+
+        // يرجع التفاصيل الكاملة (Categories, Reviews, Bio) لصفحة التفاصيل
+        public record GetBookByIdQuery(int Id) : IRequest<BookDetailedDTO?>;
+
+        // يرجع قائمة بسيطة لكل كتب مؤلف معين
+        public record GetBooksByAuthorQuery(int AuthorId) : IRequest<List<BookSimpleDTO>>;
+
+        // يرجع قائمة بسيطة حسب التصنيف
+        public record GetBooksByCategoryQuery(int CategoryId) : IRequest<List<BookSimpleDTO>>;
+
+        // يرجع الكتب المتاحة فقط بصيغة بسيطة
+        public record GetAvailableBooksQuery() : IRequest<List<BookSimpleDTO>>;
     }
 }

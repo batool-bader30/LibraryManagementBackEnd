@@ -1,82 +1,77 @@
 using LibraryManagement.Models;
 using LibraryManagement.Repository.Interface;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
-using static LibraryManagement.CQRS.Query.ReviewQueries;
+using LibraryManagement.CQRS.Query;
+using LibraryManagement.DTO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using static LibraryManagement.CQRS.ReviewQueries;
 
 namespace LibraryManagement.query
 {
-    public class ReviewQueryHandlers
+    public class ReviewQueryHandlers : 
+        IRequestHandler<GetAllReviewsQuery, List<ReviewDTO>>,
+        IRequestHandler<GetReviewByIdQuery, ReviewDTO?>,
+        IRequestHandler<GetReviewsByBookIdQuery, List<ReviewDTO>>,
+        IRequestHandler<GetReviewsByUserIdQuery, List<ReviewDTO>>
     {
         private readonly IReviewRepository _repo;
 
-        public ReviewQueryHandlers(IReviewRepository repo)
+        public ReviewQueryHandlers(IReviewRepository repo) => _repo = repo;
+
+        public async Task<List<ReviewDTO>> Handle(GetAllReviewsQuery request, CancellationToken ct)
         {
-            _repo = repo;
+            var reviews = await _repo.GetAllReviewsAsync();
+            return reviews.Select(r => new ReviewDTO
+            {
+                Id = r.Id,
+                BookId = r.BookId,
+                UserId = r.UserId,
+                Comment = r.Comment,
+                Rating = r.Rating
+            }).ToList();
         }
 
-        public class GetAllReviewsHandler : IRequestHandler<GetAllReviewsQuery, List<ReviewModel>>
+        public async Task<ReviewDTO?> Handle(GetReviewByIdQuery request, CancellationToken ct)
         {
-            private readonly IReviewRepository _repo;
-
-            public GetAllReviewsHandler(IReviewRepository repo)
+            var r = await _repo.GetReviewByIdAsync(request.Id);
+            if (r == null) return null;
+            return new ReviewDTO
             {
-                _repo = repo;
-            }
-
-            public async Task<List<ReviewModel>> Handle(GetAllReviewsQuery request, CancellationToken cancellationToken)
-            {
-                return await _repo.GetAllReviewsAsync();
-            }
+                Id = r.Id,
+                BookId = r.BookId,
+                UserId = r.UserId,
+                Comment = r.Comment,
+                Rating = r.Rating
+            };
         }
 
-        public class GetReviewByIdHandler : IRequestHandler<GetReviewByIdQuery, ReviewModel>
+        public async Task<List<ReviewDTO>> Handle(GetReviewsByBookIdQuery request, CancellationToken ct)
         {
-            private readonly IReviewRepository _repo;
-
-            public GetReviewByIdHandler(IReviewRepository repo)
+            var reviews = await _repo.GetReviewsByBookIdAsync(request.BookId);
+            return reviews.Select(r => new ReviewDTO
             {
-                _repo = repo;
-            }
-
-            public async Task<ReviewModel> Handle(GetReviewByIdQuery request, CancellationToken cancellationToken)
-            {
-                var review = await _repo.GetReviewByIdAsync(request.Id);
-                if (review == null)
-                    throw new ValidationException("Review not found.");
-
-                return review;
-            }
+                Id = r.Id,
+                BookId = r.BookId,
+                UserId = r.UserId,
+                Comment = r.Comment,
+                Rating = r.Rating
+            }).ToList();
         }
 
-        public class GetReviewsByBookIdHandler : IRequestHandler<GetReviewsByBookIdQuery, List<ReviewModel>>
+        public async Task<List<ReviewDTO>> Handle(GetReviewsByUserIdQuery request, CancellationToken ct)
         {
-            private readonly IReviewRepository _repo;
-
-            public GetReviewsByBookIdHandler(IReviewRepository repo)
+            var reviews = await _repo.GetReviewsByUserIdAsync(request.UserId);
+            return reviews.Select(r => new ReviewDTO
             {
-                _repo = repo;
-            }
-
-            public async Task<List<ReviewModel>> Handle(GetReviewsByBookIdQuery request, CancellationToken cancellationToken)
-            {
-                return await _repo.GetReviewsByBookIdAsync(request.BookId);
-            }
-        }
-
-        public class GetReviewsByUserIdHandler : IRequestHandler<GetReviewsByUserIdQuery, List<ReviewModel>>
-        {
-            private readonly IReviewRepository _repo;
-
-            public GetReviewsByUserIdHandler(IReviewRepository repo)
-            {
-                _repo = repo;
-            }
-
-            public async Task<List<ReviewModel>> Handle(GetReviewsByUserIdQuery request, CancellationToken cancellationToken)
-            {
-                return await _repo.GetReviewsByUserIdAsync(request.UserId);
-            }
+                Id = r.Id,
+                BookId = r.BookId,
+                UserId = r.UserId,
+                Comment = r.Comment,
+                Rating = r.Rating
+            }).ToList();
         }
     }
 }

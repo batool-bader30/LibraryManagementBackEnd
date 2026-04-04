@@ -2,7 +2,6 @@ using LibraryManagement.DTO;
 using LibraryManagement.command;
 using LibraryManagement.query;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using static LibraryManagement.command.UserCommands;
@@ -15,13 +14,8 @@ namespace LibraryManagement.controllers
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
+        public UserController(IMediator mediator) => _mediator = mediator;
 
-        public UserController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-       
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -29,7 +23,6 @@ namespace LibraryManagement.controllers
             return users.Count == 0 ? NotFound("No users found") : Ok(users);
         }
 
-       
         [HttpGet("GetUserById/{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -37,7 +30,6 @@ namespace LibraryManagement.controllers
             return user == null ? NotFound("User not found") : Ok(user);
         }
 
-  
         [HttpGet("GetUserByUserName/{username}")]
         public async Task<IActionResult> GetUserByUserName(string username)
         {
@@ -45,23 +37,19 @@ namespace LibraryManagement.controllers
             return user == null ? NotFound("User not found") : Ok(user);
         }
 
-        
-       
         [HttpPut("UpdateUser/{id}")]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] RegisterDto dto)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDTO dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
             var result = await _mediator.Send(new UpdateUserCommand(id, dto));
             return Ok(new { Message = result });
         }
 
-       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var deleted = await _mediator.Send(new DeleteUserCommand(id));
-            return deleted ? Ok("User deleted successfully") : NotFound("User not found");
+            return deleted ? Ok("User Deleted") : NotFound("User not found");
         }
     }
 }

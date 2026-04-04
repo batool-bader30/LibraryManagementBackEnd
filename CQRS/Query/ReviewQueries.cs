@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LibraryManagement.Models;
+using LibraryManagement.DTO;
 using MediatR;
+using System.Collections.Generic;
 
-namespace LibraryManagement.CQRS.Query
+namespace LibraryManagement.CQRS
 {
     public static class ReviewQueries
     {
-        public record GetAllReviewsQuery() : IRequest<List<ReviewModel>>;
-        public record GetReviewByIdQuery(int Id) : IRequest<ReviewModel?>;
-        public record GetReviewsByBookIdQuery(int BookId) : IRequest<List<ReviewModel>>;
-        public record GetReviewsByUserIdQuery(int UserId) : IRequest<List<ReviewModel>>;
+        public record GetAllReviewsQuery() : IRequest<List<ReviewDTO>>;
+        public record GetReviewByIdQuery(int Id) : IRequest<ReviewDTO?>;
+        public record GetReviewsByBookIdQuery(int BookId) : IRequest<List<ReviewDTO>>;
+        public record GetReviewsByUserIdQuery(string UserId) : IRequest<List<ReviewDTO>>;
     }
 }

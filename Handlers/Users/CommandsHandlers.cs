@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagement.CQRS.Handlers
 {
-   
+
     public class UpdateUserCommandHandler : IRequestHandler<UserCommands.UpdateUserCommand, string>
     {
         private readonly IUserRepository _repo;
@@ -17,17 +17,21 @@ namespace LibraryManagement.CQRS.Handlers
 
         public async Task<string> Handle(UserCommands.UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.User.userName))
+            if (string.IsNullOrWhiteSpace(request.User.UserName))
                 return "Username is required";
 
+            // 1. تجهيز موديول المستخدم بالبيانات الأساسية
             var user = new UserModel
             {
                 Id = request.Id,
-                UserName = request.User.userName,
-                Email = request.User.email
+                UserName = request.User.UserName,
+                Email = request.User.Email,
+                PhoneNumber = request.User.PhoneNumber // إضافة الهاتف هنا
             };
 
-            return await _repo.UpdateUserAsync(user);
+            // 2. إرسال المستخدم مع كلمة المرور الجديدة للميثود المعدلة في الـ Repository
+            // لاحظي أننا نمرر request.User.Password كباراميتر ثانٍ
+            return await _repo.UpdateUserAsync(user, request.User.Password);
         }
     }
 

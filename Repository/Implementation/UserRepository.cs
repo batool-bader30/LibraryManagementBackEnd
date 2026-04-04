@@ -27,13 +27,21 @@ namespace LibraryManagement.Repository.Implementation
             return result.Succeeded ? user.Id : string.Join(", ", result.Errors);
         }
 
-        public async Task<string> UpdateUserAsync(UserModel user)
+        public async Task<string> UpdateUserAsync(UserModel user, string? newPassword = null)
         {
             var existingUser = await _userManager.FindByIdAsync(user.Id);
             if (existingUser == null) return "User not found";
 
             existingUser.UserName = user.UserName;
             existingUser.Email = user.Email;
+            existingUser.PhoneNumber = user.PhoneNumber;
+
+            // إذا تم إرسال كلمة مرور جديدة، نقوم بتشفيرها وحفظها
+            if (!string.IsNullOrWhiteSpace(newPassword))
+            {
+                // هذه هي الطريقة الصحيحة لتشفير كلمة المرور يدوياً
+                existingUser.PasswordHash = _userManager.PasswordHasher.HashPassword(existingUser, newPassword);
+            }
 
             var result = await _userManager.UpdateAsync(existingUser);
             return result.Succeeded ? "Updated" : string.Join(", ", result.Errors);

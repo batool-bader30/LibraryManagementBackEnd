@@ -7,7 +7,7 @@ namespace LibraryManagement.Repository.Interface
     public interface IUserRepository
     {
         Task<string> CreateUserAsync(UserModel user, string password);
-        Task<string> UpdateUserAsync(UserModel user);
+        Task<string> UpdateUserAsync(UserModel user, string? newPassword = null);
         Task<bool> DeleteUserAsync(string id);
         Task<UserModel?> GetUserByIdAsync(string id);
         Task<UserModel?> GetUserByUserNameAsync(string userName);

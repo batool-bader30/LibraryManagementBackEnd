@@ -24,7 +24,7 @@ namespace LibraryManagement.Repository.Implementation
         {
             return await _context.Authors
 
-     .Include(a => a.books) 
+     .Include(a => a.books)
      .ToListAsync();
         }
 
@@ -53,9 +53,22 @@ namespace LibraryManagement.Repository.Implementation
         }
 
 
+
+        // أضيفي هذول جوا الكلاس AuthorRepository
+        public async Task<AuthorModel?> GetAuthorByIdAsync(int id)
+        {
+            return await _context.Authors
+                .Include(a => a.books)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task UpdateAuthorAsync(AuthorModel author)
+        {
+            _context.Authors.Update(author);
+            await _context.SaveChangesAsync();
+        }
+
     }
-
-
 }
 
 

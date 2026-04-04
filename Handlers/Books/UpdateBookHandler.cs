@@ -16,17 +16,17 @@ namespace LibraryManagement.CQRS.Handlers.Book.Commands
             _bookRepository = bookRepository;
         }
 
-        public async Task<bool> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateBookCommand request, CancellationToken ct)
         {
             var existingBook = await _bookRepository.GetBookByIdAsync(request.Book.Id);
-            if (existingBook == null)
-                return false;
+            if (existingBook == null) return false;
 
             existingBook.Title = request.Book.Title;
             existingBook.Description = request.Book.Description;
             existingBook.ISBN = request.Book.ISBN;
             existingBook.ImageUrl = request.Book.ImageUrl;
             existingBook.AuthorId = request.Book.AuthorId;
+            existingBook.IsAvailable = request.Book.IsAvailable;
 
             await _bookRepository.UpdateBookAsync(existingBook);
             return true;

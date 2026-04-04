@@ -41,5 +41,19 @@ namespace LibraryManagement.Repository.Implementation
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<CategoryModel?> GetCategoryByIdAsync(int id)
+        {
+            return await _context.Categories
+                .Include(c => c.BookCategories)
+                    .ThenInclude(bc => bc.Book) // عشان نجيب الكتب اللي جوا التصنيف
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task UpdateCategoryAsync(CategoryModel category)
+        {
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+        }
     }
 }

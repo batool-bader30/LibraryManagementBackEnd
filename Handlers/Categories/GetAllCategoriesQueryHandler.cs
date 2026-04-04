@@ -1,3 +1,4 @@
+using LibraryManagement.DTO;
 using LibraryManagement.Models;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
@@ -5,23 +6,24 @@ using static LibraryManagement.query.CategoryQueries;
 
 namespace LibraryManagement.Handlers
 {
-    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, List<CategoryModel>>
+
+
+    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, List<CategoryDTO>>
     {
         private readonly ICategoryRepository _repo;
+        public GetAllCategoriesQueryHandler(ICategoryRepository repo) => _repo = repo;
 
-        public GetAllCategoriesQueryHandler(ICategoryRepository repo)
+        public async Task<List<CategoryDTO>> Handle(GetAllCategoriesQuery request, CancellationToken ct)
         {
-            _repo = repo;
-        }
+            var categories = await _repo.GetAllCategoriesAsync();
 
-        public async Task<List<CategoryModel>> Handle(GetAllCategoriesQuery request, CancellationToken ct)
-        {
-            var books = await _repo.GetAllCategoriesAsync();
-            if (books.Count == 0)
+            // التحويل من Model لـ DTO يحل مشكلة الـ "object does not contain Name"
+            return categories.Select(c => new CategoryDTO
             {
-                throw new Exception("No Books exists!");
-            }
-            return books;
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
         }
     }
 }
+

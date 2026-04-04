@@ -1,23 +1,23 @@
-using LibraryManagement.Models;
+// داخل ملف GetBooksByCategoryHandler.cs
+using LibraryManagement.DTO;
 using LibraryManagement.Repository.Interface;
-using LibraryManagement.query;
 using MediatR;
 using static LibraryManagement.query.BookQueries;
 
-namespace LibraryManagement.CQRS.Handlers.Book.Queries
+public class GetBooksByCategoryHandler : IRequestHandler<GetBooksByCategoryQuery, List<BookSimpleDTO>>
 {
-    public class GetBooksByCategoryHandler : IRequestHandler<GetBooksByCategoryQuery, List<BookModel>>
+    private readonly IBookRepository _repo;
+    public GetBooksByCategoryHandler(IBookRepository repo) => _repo = repo;
+
+    public async Task<List<BookSimpleDTO>> Handle(GetBooksByCategoryQuery request, CancellationToken ct)
     {
-        private readonly IBookRepository _bookRepository;
-
-        public GetBooksByCategoryHandler(IBookRepository bookRepository)
-        {
-            _bookRepository = bookRepository;
-        }
-
-        public async Task<List<BookModel>> Handle(GetBooksByCategoryQuery request, CancellationToken cancellationToken)
-        {
-            return await _bookRepository.GetBooksByCategoryAsync(request.CategoryId);
-        }
+        var books = await _repo.GetBooksByCategoryIdAsync(request.CategoryId);
+        return books.Select(b => new BookSimpleDTO {
+            Id = b.Id,
+            Title = b.Title,
+            ImageUrl = b.ImageUrl,
+            AuthorName = b.Author?.Name ?? "Unknown",
+            IsAvailable = b.IsAvailable
+        }).ToList();
     }
 }

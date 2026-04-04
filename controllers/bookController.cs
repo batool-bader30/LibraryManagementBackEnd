@@ -1,5 +1,4 @@
 using LibraryManagement.DTO;
-using LibraryManagement.Models;
 using LibraryManagement.CQRS.command;
 using LibraryManagement.query;
 using MediatR;
@@ -10,7 +9,6 @@ using static LibraryManagement.CQRS.command.BookCommands;
 namespace LibraryManagement.controllers
 {
     [Route("api/[controller]")]
-
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -26,6 +24,7 @@ namespace LibraryManagement.controllers
         [HttpGet("GetAllBooks")]
         public async Task<IActionResult> GetAllBooks()
         {
+            // سيرجع List<BookSimpleDTO>
             var result = await _mediator.Send(new BookQueries.GetAllBooksQuery());
             return result.Count == 0 ? NotFound() : Ok(result);
         }
@@ -33,6 +32,7 @@ namespace LibraryManagement.controllers
         [HttpGet("GetBookById/{id}")]
         public async Task<IActionResult> GetBookById(int id)
         {
+            // سيرجع BookDetailedDTO
             var result = await _mediator.Send(new BookQueries.GetBookByIdQuery(id));
             return result == null ? NotFound() : Ok(result);
         }
@@ -59,31 +59,11 @@ namespace LibraryManagement.controllers
         }
 
         [HttpPost("AddBook")]
-            [Authorize(Roles = "Admin")]
-
         public async Task<IActionResult> AddBook([FromForm] CreateBookDTO dto)
         {
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
             {
-                // إنشاء اسم فريد للملف
-                var fileName = Guid.NewGuid() + Path.GetExtension(dto.ImageFile.FileName);
-
-                // مسار الفولدر النهائي
-                var folderPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "images", "books");
-
-                // إنشاء الفولدر إذا ما موجود
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
-
-                // مسار الملف الكامل
-                var filePath = Path.Combine(folderPath, fileName);
-
-                // حفظ الملف
-                using var stream = new FileStream(filePath, FileMode.Create);
-                await dto.ImageFile.CopyToAsync(stream);
-
-                // رابط الصورة ليُحفظ في قاعدة البيانات
-                dto.ImageUrl = "/images/books/" + fileName;
+                dto.ImageUrl = await SaveImage(dto.ImageFile);
             }
 
             var bookId = await _mediator.Send(new CreateBookCommand(dto));
@@ -91,38 +71,43 @@ namespace LibraryManagement.controllers
         }
 
         [HttpPut("UpdateBook/{id}")]
-            [Authorize(Roles = "Admin")]
-
-        public async Task<IActionResult> UpdateBook(int id, [FromForm] BookDTO dto)
+        public async Task<IActionResult> UpdateBook(int id, [FromForm] UpdateBookDTO dto)
         {
-            // إذا تم رفع صورة جديدة أثناء التحديث
+            // التأكد من تطابق الـ ID
+            dto.Id = id;
+
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
             {
-                var fileName = Guid.NewGuid() + Path.GetExtension(dto.ImageFile.FileName);
-                var folderPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "images", "books");
-
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
-
-                var filePath = Path.Combine(folderPath, fileName);
-
-                using var stream = new FileStream(filePath, FileMode.Create);
-                await dto.ImageFile.CopyToAsync(stream);
-
-                dto.ImageUrl = "/images/books/" + fileName;
+                dto.ImageUrl = await SaveImage(dto.ImageFile);
             }
 
-            var result = await _mediator.Send(new BookCommands.UpdateBookCommand(id, dto));
+            // إرسال الـ UpdateBookDTO للـ Handler
+            var result = await _mediator.Send(new BookCommands.UpdateBookCommand(dto));
             return result ? Ok("Updated") : NotFound();
         }
 
         [HttpDelete("DeleteBook/{id}")]
-            [Authorize(Roles = "Admin")]
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             var result = await _mediator.Send(new BookCommands.DeleteBookByIdCommand(id));
             return result ? Ok("Deleted") : NotFound();
+        }
+
+        // ميثود مساعدة (Private) لتقليل تكرار كود حفظ الصور
+        private async Task<string> SaveImage(IFormFile file)
+        {
+            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var folderPath = Path.Combine(_env.WebRootPath ?? "wwwroot", "images", "books");
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, fileName);
+            using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+
+            return "/images/books/" + fileName;
         }
     }
 }

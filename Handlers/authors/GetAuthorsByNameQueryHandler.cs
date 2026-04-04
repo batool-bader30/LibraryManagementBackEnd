@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LibraryManagement.Models;
+using LibraryManagement.DTO;
 using LibraryManagement.Repositories.Interfaces;
 using MediatR;
 using static LibraryManagement.query.AuthorQuerys;
 
 namespace LibraryManagement.Handlers
 {
-    public class GetAuthorsByNameQueryHandler : IRequestHandler<GetAuthorsByNameQuery, List<AuthorModel>>
+    public class GetAuthorsByNameQueryHandler : IRequestHandler<GetAuthorsByNameQuery, List<AuthorResponseDTO>>
     {
         private readonly IAuthorRepository _repo;
 
@@ -17,14 +13,34 @@ namespace LibraryManagement.Handlers
         {
             _repo = repo;
         }
-        public async Task<List<AuthorModel>> Handle(GetAuthorsByNameQuery request, CancellationToken ct)
+
+        public async Task<List<AuthorResponseDTO>> Handle(GetAuthorsByNameQuery request, CancellationToken ct)
         {
+            // جلب البيانات من المستودع (Repository)
             var authors = await _repo.GetAuthorByNameAsync(request.Name);
-            if (authors.Count == 0)
+
+            // التحقق إذا كانت القائمة فارغة
+            if (authors == null || authors.Count == 0)
             {
-                throw new Exception("author not exists!");
+                // رمي استثناء يوضح أن المؤلف غير موجود
+                throw new KeyNotFoundException($"Author with name '{request.Name}' does not exist!");
             }
-            return authors;
+
+            // تحويل النتائج إلى DTO لقطع العلاقات الدائرية
+            return authors.Select(a => new AuthorResponseDTO
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Bio = a.Bio,
+                Books = a.books.Select(b => new BookSimpleDTO
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    ImageUrl = b.ImageUrl,
+                    AuthorName = a.Name,
+                    IsAvailable = b.IsAvailable
+                }).ToList()
+            }).ToList();
         }
     }
 }

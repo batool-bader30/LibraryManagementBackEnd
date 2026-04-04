@@ -16,35 +16,32 @@ namespace LibraryManagement.CQRS.Handlers.Book.Commands
             _bookRepository = bookRepository;
         }
 
-        public async Task<int> Handle(CreateBookCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateBookCommand request, CancellationToken ct)
         {
-            var existingBooks = await _bookRepository.GetAllBooksAsync();
-            if (existingBooks.Any(b => b.ISBN == request.Book.ISBN))
+            // التحقق من الـ ISBN
+            var allBooks = await _bookRepository.GetAllBooksAsync();
+            if (allBooks.Any(b => b.ISBN == request.Book.ISBN))
                 throw new Exception("Book with the same ISBN already exists.");
 
-         BookModel newBook = new()
-{
-    Title = request.Book.Title,
-    Description = request.Book.Description,
-    ISBN = request.Book.ISBN,
-    ImageUrl = request.Book.ImageUrl,
-    AuthorId = request.Book.AuthorId,
-    IsAvailable = true,
-    BookCategories = new List<BookCategoryModel>() // <- هنا الحل
-};
+            BookModel newBook = new()
+            {
+                Title = request.Book.Title,
+                Description = request.Book.Description,
+                ISBN = request.Book.ISBN,
+                ImageUrl = request.Book.ImageUrl,
+                AuthorId = request.Book.AuthorId,
+                IsAvailable = true,
+                BookCategories = new List<BookCategoryModel>()
+            };
 
-// ربط الكاتيجوريز
-foreach (var catId in request.Book.CategoryIds)
-{
-    newBook.BookCategories.Add(new BookCategoryModel
-    {
-        CategoryId = catId
-    });
-}
+            // ربط الكاتيجوريز مع التحقق من وجودها
+            foreach (var catId in request.Book.CategoryIds)
+            {
+                newBook.BookCategories.Add(new BookCategoryModel { CategoryId = catId });
+            }
 
-await _bookRepository.AddBookAsync(newBook);
-return newBook.Id;
-
+            await _bookRepository.AddBookAsync(newBook);
+            return newBook.Id;
         }
     }
 }

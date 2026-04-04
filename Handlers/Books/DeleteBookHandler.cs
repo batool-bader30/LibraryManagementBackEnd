@@ -14,12 +14,8 @@ namespace LibraryManagement.CQRS.Handlers.Book.Commands
             _bookRepository = bookRepository;
         }
 
-        public async Task<bool> Handle(DeleteBookByIdCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteBookByIdCommand request, CancellationToken ct)
         {
-            var book = await _bookRepository.GetBookByIdAsync(request.Id);
-            if (book == null)
-                return false;
-
             return await _bookRepository.DeleteBookAsync(request.Id);
         }
     }

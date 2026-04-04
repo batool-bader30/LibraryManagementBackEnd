@@ -13,11 +13,13 @@ using LibraryManagement.Extentions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
- builder.Services.AddCors(options => {
+builder.Services.AddCors(options =>
+{
     options.AddPolicy("AllowAll",
         builder => builder.AllowAnyOrigin()
                           .AllowAnyMethod()
@@ -26,9 +28,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Add services to the container.
 builder.Services.AddControllers()
-    .AddJsonOptions(x =>
-        x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
-    );
+    .AddJsonOptions(options =>
+    {
+        // هذا السطر يمنع التكرار اللانهائي (Reference Loop)
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
+        // اختياري: عشان تخلي الـ JSON يطلع مرتب (Formatted) وسهل القراءة
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
 // 2. Configure DbContext
 builder.Services.AddDbContext<AppDBcontext>(options =>
@@ -46,8 +53,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "http://localhost:5000",  
-            ValidAudience = "http://localhost:5000",  
+            ValidIssuer = "http://localhost:5000",
+            ValidAudience = "http://localhost:5000",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lhkjdgdgdkmdfk2554354657knknjbn@#$%^&k4jh245"))  // مفتاح سري قوي (32 حرفاً على الأقل)
         };
     });
@@ -76,7 +83,7 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<AppDBcontext>()
     .AddDefaultTokenProviders();
-    builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Events.OnRedirectToLogin = context =>
     {
@@ -104,10 +111,10 @@ using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
-    
+
     // قائمة الأدوار المطلوبة
     string[] roles = { "User", "Admin" };
-    
+
     foreach (var role in roles)
     {
         // تحقق إذا كان الدور موجوداً، وإلا أنشئه
@@ -127,12 +134,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();  
+app.UseRouting();
 
-app.UseCors("AllowAll");      
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.MapControllers();
+app.UseStaticFiles();
 
 app.Run();

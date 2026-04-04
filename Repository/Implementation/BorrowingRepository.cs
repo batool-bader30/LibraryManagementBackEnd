@@ -50,12 +50,18 @@ namespace LibraryManagement.Repository.Implementation
 
         public async Task<List<BorrowingModel>> GetAllBorrowingsAsync()
         {
-            return await _context.Borrowings.ToListAsync();
+            return await _context.Borrowings
+        .Include(b => b.Book)
+        .Include(b => b.User)
+        .ToListAsync();
         }
 
         public async Task<BorrowingModel?> GetBorrowingByIdAsync(int id)
         {
-            return await _context.Borrowings.FindAsync(id);
+            return await _context.Borrowings
+                .Include(b => b.Book)
+                .Include(b => b.User)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task<List<BorrowingModel>> GetActiveBorrowingsAsync()
@@ -65,13 +71,15 @@ namespace LibraryManagement.Repository.Implementation
                 .ToListAsync();
         }
 
-        public async Task<List<BorrowingModel>> GetBorrowingsByUserIdAsync(int userId)
+
+        public async Task<List<BorrowingModel>> GetBorrowingsByUserIdAsync(string userId)
         {
             return await _context.Borrowings
-                .Where(b => b.UserId == userId.ToString())
+                .Include(b => b.Book)
+                .Include(b => b.User)
+                .Where(b => b.UserId == userId)
                 .ToListAsync();
         }
-
         public async Task UpdateBorrowingAsync(BorrowingModel borrowing)
         {
             var existing = await _context.Borrowings
