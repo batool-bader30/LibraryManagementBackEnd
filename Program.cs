@@ -14,54 +14,52 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- 1. إعداد الـ CORS ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader());
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 });
 
-// 1. Add services to the container.
+// --- 2. إعداد الـ Controllers والـ JSON ---
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // هذا السطر يمنع التكرار اللانهائي (Reference Loop)
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-
-        // اختياري: عشان تخلي الـ JSON يطلع مرتب (Formatted) وسهل القراءة
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-// 2. Configure DbContext
+// --- 3. قاعدة البيانات ---
 builder.Services.AddDbContext<AppDBcontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 
-// 3. Swagger & JWT (إعداداتك الخاصة)
+// --- 4. Swagger & JWT ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenJwtAuth();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = "http://localhost:5000",
             ValidAudience = "http://localhost:5000",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lhkjdgdgdkmdfk2554354657knknjbn@#$%^&k4jh245"))  // مفتاح سري قوي (32 حرفاً على الأقل)
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lhkjdgdgdkmdfk2554354657knknjbn@#$%^&k4jh245"))
         };
     });
-// 4. MediatR
-builder.Services.AddMediatR(typeof(Program));
 
-// 5. Repositories
+// --- 5. MediatR & Repositories ---
+builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -69,31 +67,19 @@ builder.Services.AddScoped<IBorrowingRepository, BorrowingRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-
-
-// 6. Identity Configuration
+// --- 6. Identity Configuration ---
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 {
-    // يمكنك تعديل شروط الباسورد هنا لتسهيل التيست
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 1;
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
 })
-    .AddEntityFrameworkStores<AppDBcontext>()
-    .AddDefaultTokenProviders();
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-});
+.AddEntityFrameworkStores<AppDBcontext>()
+.AddDefaultTokenProviders();
 
-
-// 7. الحل الجذري لمشكلة الـ 404 (منع التحويل لصفحة Login)
+// تخصيص الـ 401 Unauthorized بدلاً من تحويل الـ Login
 builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
 {
     options.Events.OnRedirectToLogin = context =>
@@ -102,22 +88,18 @@ builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.Ap
         return Task.CompletedTask;
     };
 });
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-
+// --- 7. Seed Data (Roles) ---
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
-
-    // قائمة الأدوار المطلوبة
     string[] roles = { "User", "Admin" };
-
     foreach (var role in roles)
     {
-        // تحقق إذا كان الدور موجوداً، وإلا أنشئه
         if (!await roleManager.RoleExistsAsync(role))
         {
             await roleManager.CreateAsync(new IdentityRole(role));
@@ -125,22 +107,34 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// --- 8. الـ Middleware Pipeline (الترتيب هنا حرج جداً) ---
 
-
-// 8. Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
+
+// أ. تفعيل الملفات الثابتة (الصور) - يجب أن تكون قبل الـ Auth
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+    RequestPath = ""
+});
+
 app.UseRouting();
 
+// ب. تفعيل الـ CORS
 app.UseCors("AllowAll");
+
+// ج. تفعيل الحماية
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.MapControllers();
-app.UseStaticFiles();
 
-app.Run();
+// د. تعريف الـ Controllers
+app.MapControllers();
+
+// هـ. تشغيل السيرفر ليقبل الاتصال من الموبايل (عبر الـ IP)
+app.Run("http://0.0.0.0:5000");

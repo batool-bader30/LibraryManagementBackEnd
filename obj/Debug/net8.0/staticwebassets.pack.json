@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\images\\books\\0fa7931b-458b-4394-8278-61c25c210122.png"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\14778c70-cc03-4740-94a9-b22d4efe5e17.PNG",
+      "PackagePath": "staticwebassets\\images\\books\\14778c70-cc03-4740-94a9-b22d4efe5e17.PNG"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\293c1084-40e1-4dbe-801d-bcb5b8e15257.png",
       "PackagePath": "staticwebassets\\images\\books\\293c1084-40e1-4dbe-801d-bcb5b8e15257.png"
     },
@@ -17,12 +21,28 @@
       "PackagePath": "staticwebassets\\images\\books\\65638a3a-e475-4a7c-951e-84d72f09e18d.png"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\6a9bf9a7-e401-4b47-bd8f-828b00126b07.PNG",
+      "PackagePath": "staticwebassets\\images\\books\\6a9bf9a7-e401-4b47-bd8f-828b00126b07.PNG"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif",
       "PackagePath": "staticwebassets\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\bea6111b-525a-43f8-9a92-bedb8fcbeabf.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\bea6111b-525a-43f8-9a92-bedb8fcbeabf.jfif"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif",
       "PackagePath": "staticwebassets\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\f02582d0-024c-4ae8-8147-0b426617a736.PNG",
+      "PackagePath": "staticwebassets\\images\\books\\f02582d0-024c-4ae8-8147-0b426617a736.PNG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\fc0db5fd-a675-4ab4-90f6-366b05dd31ba.PNG",
+      "PackagePath": "staticwebassets\\images\\books\\fc0db5fd-a675-4ab4-90f6-366b05dd31ba.PNG"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LibraryManagement.Microsoft.AspNetCore.StaticWebAssets.props",

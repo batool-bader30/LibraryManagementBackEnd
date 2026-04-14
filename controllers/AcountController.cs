@@ -37,13 +37,15 @@ namespace LibraryManagement.Controllers
             var user = new UserModel
             {
                 UserName = model.userName,
-                Email = model.userName  // افترض أن userName هو البريد الإلكتروني، أو أضف حقل Email في DTO إذا لزم
+                Email = model.email,  
+                PhoneNumber=model.phoneNumber?? ""
+                
             };
 
             var result = await _userManager.CreateAsync(user, model.password);
             if (!result.Succeeded)
             {
-                return BadRequest(new { message = "فشل في إنشاء الحساب", errors = result.Errors });
+                return BadRequest(new { message = "feild to create account", errors = result.Errors });
             }
 
             // إضافة الدور (إذا كان Admin، تأكد من الصلاحية)
@@ -70,56 +72,73 @@ namespace LibraryManagement.Controllers
                 signingCredentials: creds
             );
 
-            return Ok(new { message = "تم التسجيل بنجاح", token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Ok(new { message = "Success", token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LogInDto model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new LoginResultDto { Success = false, Message = "بيانات غير صحيحة" });
-            }
+       [HttpPost("login")]
+public async Task<IActionResult> Login([FromBody] LogInDto model)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(new LoginResultDto { Success = false, Message = "Invalid data provided" });
+    }
 
-            // محاولة تسجيل الدخول
-            var result = await _signInManager.PasswordSignInAsync(model.userName, model.password, false, false);
-            if (!result.Succeeded)
-            {
-                return Unauthorized(new LoginResultDto { Success = false, Message = "بيانات الدخول غير صحيحة" });
-            }
+    // 1. Find user by Email first
+    var user = await _userManager.FindByEmailAsync(model.email);
+    
+    // If not found by email, try finding by Username
+    if (user == null)
+    {
+        user = await _userManager.FindByNameAsync(model.email);
+    }
 
-            // الحصول على المستخدم لاستخراج الدور
-            var user = await _userManager.FindByNameAsync(model.userName);
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault() ?? "User";  // افترض دور واحد
+    // 2. Check if user exists
+    if (user == null)
+    {
+        return BadRequest(new LoginResultDto { Success = false, Message = "User not found" });
+    }
 
-            // إنشاء توكن JWT
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, role)
-            };
+    // 3. Verify password using CheckPasswordSignInAsync
+    var result = await _signInManager.CheckPasswordSignInAsync(user, model.password, false);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    if (!result.Succeeded)
+    {
+        return Unauthorized(new LoginResultDto { Success = false, Message = "Invalid email or password" });
+    }
 
-            var expiration = DateTime.Now.AddHours(1);
-            var token = new JwtSecurityToken(
-                issuer: _issuer,
-                audience: _audience,
-                claims: claims,
-                expires: expiration,
-                signingCredentials: creds
-            );
+    // 4. Get User Roles
+    var roles = await _userManager.GetRolesAsync(user);
+    var role = roles.FirstOrDefault() ?? "User";
 
-            return Ok(new LoginResultDto
-            {
-                Success = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = expiration,
-                Message = "تم تسجيل الدخول بنجاح",
-                Role = role
-            });
-        }
+    // 5. Generate JWT Token
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.UserName ?? ""),
+        new Claim(ClaimTypes.Email, user.Email ?? ""),
+        new Claim(ClaimTypes.Role, role),
+        new Claim("UserId", user.Id)
+    };
+
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    var expiration = DateTime.Now.AddHours(1);
+
+    var token = new JwtSecurityToken(
+        issuer: _issuer,
+        audience: _audience,
+        claims: claims,
+        expires: expiration,
+        signingCredentials: creds
+    );
+
+    return Ok(new LoginResultDto
+    {
+        Success = true,
+        Token = new JwtSecurityTokenHandler().WriteToken(token),
+        Expiration = expiration,
+        Message = "Login successful",
+        Role = role
+    });
+}
     }
 }

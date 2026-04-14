@@ -15,7 +15,7 @@ public class RegisterDto
 public class LogInDto
 {
     [Required]
-    public string userName { get; set; }
+    public string email { get; set; }
     [Required]
     public string password { get; set; }
 }

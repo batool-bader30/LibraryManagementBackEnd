@@ -23,24 +23,25 @@ namespace LibraryManagement.Handlers
             if (result != null && result.Count > 0)
                 throw new Exception("Author already exists!");
 
-            // 2. تحويل الـ DTO إلى Model للتعامل مع قاعدة البيانات
+            // 2. تحويل الـ DTO إلى Model (إضافة ImageUrl هنا)
             var author = new AuthorModel
             {
-                // تأكدي أن خاصية Id موجودة في الموديل كما اتفقنا سابقاً
                 Name = request.Author.Name,
-                Bio = request.Author.Bio
+                Bio = request.Author.Bio,
+                ImageUrl = request.Author.ImageUrl // <--- التعديل: ربط الصورة بالموديل
             };
 
             // 3. الحفظ في قاعدة البيانات
             await _repo.CreateAuthor(author);
 
-            // 4. إرجاع الـ AuthorResponseDTO (الآن الـ author.Id صار له قيمة بعد الحفظ)
+            // 4. إرجاع الـ AuthorResponseDTO مع الـ ImageUrl
             return new AuthorResponseDTO
             {
                 Id = author.Id,
                 Name = author.Name,
                 Bio = author.Bio,
-                Books = new List<BookSimpleDTO>() // قائمة فارغة للمؤلف الجديد
+                ImageUrl = author.ImageUrl, // <--- التعديل: إرجاع الرابط للـ Frontend
+                Books = new List<BookSimpleDTO>() 
             };
         }
     }

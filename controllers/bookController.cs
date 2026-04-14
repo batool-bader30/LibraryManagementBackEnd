@@ -87,7 +87,6 @@ namespace LibraryManagement.controllers
         }
 
         [HttpDelete("DeleteBook/{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             var result = await _mediator.Send(new BookCommands.DeleteBookByIdCommand(id));

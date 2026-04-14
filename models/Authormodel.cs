@@ -13,6 +13,7 @@ namespace LibraryManagement.Models
         [Required]
         public string? Name { set; get; }
         public string? Bio { set; get; }
+        public string? ImageUrl { get; set; }
         public List<BookModel> books { get; set; } = new List<BookModel>();
 
     }

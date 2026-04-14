@@ -32,12 +32,13 @@ namespace LibraryManagement.Handlers
                 Id = a.Id,
                 Name = a.Name,
                 Bio = a.Bio,
+                 ImageUrl = a.ImageUrl,
                 Books = a.books.Select(b => new BookSimpleDTO
                 {
                     Id = b.Id,
                     Title = b.Title,
                     ImageUrl = b.ImageUrl,
-                    AuthorName = a.Name,
+                    AuthorName = a.Name?? "",
                     IsAvailable = b.IsAvailable
                 }).ToList()
             }).ToList();
