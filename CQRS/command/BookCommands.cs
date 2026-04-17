@@ -10,6 +10,6 @@ namespace LibraryManagement.CQRS.command
         public record DeleteBookByIdCommand(int Id) : IRequest<bool>;
         
         // التعديل: نستخدم UpdateBookDTO لضمان وصول كل البيانات المطلوبة للتعديل
-        public record UpdateBookCommand(UpdateBookDTO Book) : IRequest<bool>;
+        public record UpdateBookCommand(UpdateBookDTO Book,int Id) : IRequest<bool>;
     }
 }

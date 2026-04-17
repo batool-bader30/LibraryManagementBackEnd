@@ -37,8 +37,7 @@ builder.Services.AddControllers()
 
 // --- 3. قاعدة البيانات ---
 builder.Services.AddDbContext<AppDBcontext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
-
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 // --- 4. Swagger & JWT ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenJwtAuth();

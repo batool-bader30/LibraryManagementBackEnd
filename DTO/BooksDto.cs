@@ -8,9 +8,9 @@ namespace LibraryManagement.DTO
     public class BookSimpleDTO
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public string? ImageUrl { get; set; }
-        public string AuthorName { get; set; }
+        public string? AuthorName { get; set; }
         public bool IsAvailable { get; set; }
     }
 
@@ -19,15 +19,20 @@ namespace LibraryManagement.DTO
     public class BookDetailedDTO
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public string ISBN { get; set; }
         public string? ImageUrl { get; set; }
         public bool IsAvailable { get; set; }
+         public string? PageNumber { get; set; }
+        public string? Language { get; set; }
+        public string? PublishDate { get; set; }
+
+
 
         // بيانات المؤلف الأساسية
         public int AuthorId { get; set; }
-        public string AuthorName { get; set; }
+        public string? AuthorName { get; set; }
 
         // قائمة أسماء التصنيفات (Strings) لسهولة العرض
         public List<string> Categories { get; set; } = new();
@@ -46,10 +51,12 @@ namespace LibraryManagement.DTO
         public string Description { get; set; }
         public string ISBN { get; set; }
         public int AuthorId { get; set; }
+         public string? PageNumber { get; set; }
+        public string? Language { get; set; }
+        public string? PublishDate { get; set; }
 
-        // نستخدم IFormFile لرفع الصورة من Flutter/Swagger
         public IFormFile? ImageFile { get; set; }
-        public string? ImageUrl { get; set; } // يتم تعبئته في الـ Handler بعد الرفع
+        public string? ImageUrl { get; set; }
 
         public List<int> CategoryIds { get; set; } = new();
     }
@@ -57,14 +64,8 @@ namespace LibraryManagement.DTO
     // 4. DTO لعملية التعديل (Update)
     public class UpdateBookDTO
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
         public string Description { get; set; }
-        public string ISBN { get; set; }
-        public int AuthorId { get; set; }
         public bool IsAvailable { get; set; }
-        public IFormFile? ImageFile { get; set; }
-        public string? ImageUrl { get; set; }
         public List<int> CategoryIds { get; set; } = new();
     }
 }

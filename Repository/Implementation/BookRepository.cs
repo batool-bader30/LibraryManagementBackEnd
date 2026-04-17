@@ -30,6 +30,8 @@ public class BookRepository : IBookRepository
             .Include(b => b.BookCategories)
                 .ThenInclude(bc => bc.Category)
             .Include(b => b.Reviews)
+                .ThenInclude(r => r.User)
+                .Include(b => b.Borrowings)
                 .ThenInclude(r => r.User) // عشان نجيب اسم اللي عمل التقييم
             .FirstOrDefaultAsync(b => b.Id == id);
     }

@@ -151,3 +151,5 @@ C:\Users\Dell\Desktop\ASP.NET core api web\LibraryManagement\bin\Debug\net8.0\Fl
 C:\Users\Dell\Desktop\ASP.NET core api web\LibraryManagement\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Users\Dell\Desktop\ASP.NET core api web\LibraryManagement\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Users\Dell\Desktop\ASP.NET core api web\LibraryManagement\bin\Debug\net8.0\LibraryManagement.staticwebassets.runtime.json
+C:\Users\Dell\Desktop\ASP.NET core api web\LibraryManagement\bin\Debug\net8.0\Npgsql.dll
+C:\Users\Dell\Desktop\ASP.NET core api web\LibraryManagement\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

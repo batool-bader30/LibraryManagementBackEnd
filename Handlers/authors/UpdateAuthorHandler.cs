@@ -17,7 +17,6 @@ namespace LibraryManagement.Handlers
             if (author == null) return false;
 
             // تحديث الحقول الأساسية
-            author.Name = request.Author.Name;
             author.Bio = request.Author.Bio;
 
             // التعديل هنا: تحديث رابط الصورة الجديد

@@ -73,16 +73,7 @@ namespace LibraryManagement.controllers
         [HttpPut("UpdateBook/{id}")]
         public async Task<IActionResult> UpdateBook(int id, [FromForm] UpdateBookDTO dto)
         {
-            // التأكد من تطابق الـ ID
-            dto.Id = id;
-
-            if (dto.ImageFile != null && dto.ImageFile.Length > 0)
-            {
-                dto.ImageUrl = await SaveImage(dto.ImageFile);
-            }
-
-            // إرسال الـ UpdateBookDTO للـ Handler
-            var result = await _mediator.Send(new BookCommands.UpdateBookCommand(dto));
+            var result = await _mediator.Send(new BookCommands.UpdateBookCommand(dto,id));
             return result ? Ok("Updated") : NotFound();
         }
 

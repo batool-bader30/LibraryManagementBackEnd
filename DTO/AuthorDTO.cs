@@ -29,7 +29,6 @@ namespace LibraryManagement.DTO
     public class UpdateAuthorDTO
     {
         [Required(ErrorMessage = "Name is required")]
-        public string Name { get; set; }
         public string? Bio { get; set; }
 
         // أضفنا خاصية الصورة عند التحديث

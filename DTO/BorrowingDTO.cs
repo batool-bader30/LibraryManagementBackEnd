@@ -19,6 +19,9 @@ namespace LibraryManagement.DTO
     {
         public int BookId { get; set; }
         public string UserId { get; set; }
+         public DateTime BorrowDate { get; set; } = DateTime.UtcNow;
+        public DateTime? ReturnDate { get; set; }
+
     }
 
     public class UpdateBorrowingDTO
