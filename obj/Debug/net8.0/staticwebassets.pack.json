@@ -1,36 +1,148 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\03c5ce7e-b8fd-4462-ad6d-0ba2001961dc.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\03c5ce7e-b8fd-4462-ad6d-0ba2001961dc.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\0f483ba9-6c4f-4fab-90d5-e9217d060d54.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\0f483ba9-6c4f-4fab-90d5-e9217d060d54.JPG"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\0fa7931b-458b-4394-8278-61c25c210122.png",
       "PackagePath": "staticwebassets\\images\\books\\0fa7931b-458b-4394-8278-61c25c210122.png"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\12094694-f4d9-4dc9-9fcb-72cfaf98dce9.jpg",
+      "PackagePath": "staticwebassets\\images\\books\\12094694-f4d9-4dc9-9fcb-72cfaf98dce9.jpg"
     },
     {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\14778c70-cc03-4740-94a9-b22d4efe5e17.PNG",
       "PackagePath": "staticwebassets\\images\\books\\14778c70-cc03-4740-94a9-b22d4efe5e17.PNG"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\1666b74e-516c-4e1b-81f5-bd60fc7648bb.jpg",
+      "PackagePath": "staticwebassets\\images\\books\\1666b74e-516c-4e1b-81f5-bd60fc7648bb.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\2021e1e4-35d9-4045-9c91-a92de5c32893.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\2021e1e4-35d9-4045-9c91-a92de5c32893.jfif"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\256875ac-b1a5-4324-9263-59791c87b1bb.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\256875ac-b1a5-4324-9263-59791c87b1bb.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\26a95765-c52c-4b57-b6da-0d25a7ad4f2c.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\26a95765-c52c-4b57-b6da-0d25a7ad4f2c.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\285859f9-c4c9-4028-884a-8a57e0554765.jpg",
+      "PackagePath": "staticwebassets\\images\\books\\285859f9-c4c9-4028-884a-8a57e0554765.jpg"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\293c1084-40e1-4dbe-801d-bcb5b8e15257.png",
       "PackagePath": "staticwebassets\\images\\books\\293c1084-40e1-4dbe-801d-bcb5b8e15257.png"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\3167b29b-dcb6-4a3b-9457-58dad5b6d035.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\3167b29b-dcb6-4a3b-9457-58dad5b6d035.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\352f40ea-3d09-47a1-9d9a-ce64693767bf.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\352f40ea-3d09-47a1-9d9a-ce64693767bf.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\4126c9ba-ebab-4f6a-b073-9addf54a4aed.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\4126c9ba-ebab-4f6a-b073-9addf54a4aed.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\4c952156-1800-447b-9e66-27d11c812306.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\4c952156-1800-447b-9e66-27d11c812306.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\4e1d6374-741e-4b4b-a23e-b228e6afa234.png",
+      "PackagePath": "staticwebassets\\images\\books\\4e1d6374-741e-4b4b-a23e-b228e6afa234.png"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\55b6321a-6e5a-4a34-a101-4daec2d60ad3.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\55b6321a-6e5a-4a34-a101-4daec2d60ad3.JPG"
     },
     {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\5b364989-7b4b-4ce9-9324-96c1136393ad.jfif",
       "PackagePath": "staticwebassets\\images\\books\\5b364989-7b4b-4ce9-9324-96c1136393ad.jfif"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\6004ba31-d315-4b58-a1ac-0cd9d9dddd0b.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\6004ba31-d315-4b58-a1ac-0cd9d9dddd0b.jfif"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\65638a3a-e475-4a7c-951e-84d72f09e18d.png",
       "PackagePath": "staticwebassets\\images\\books\\65638a3a-e475-4a7c-951e-84d72f09e18d.png"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\67c11972-d325-4e8f-8cd8-fa3cf1921c1f.png",
+      "PackagePath": "staticwebassets\\images\\books\\67c11972-d325-4e8f-8cd8-fa3cf1921c1f.png"
     },
     {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\6a9bf9a7-e401-4b47-bd8f-828b00126b07.PNG",
       "PackagePath": "staticwebassets\\images\\books\\6a9bf9a7-e401-4b47-bd8f-828b00126b07.PNG"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\7085f478-ea96-4f4f-9009-c573ddc95395.jfif",
+      "PackagePath": "staticwebassets\\images\\books\\7085f478-ea96-4f4f-9009-c573ddc95395.jfif"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\77bb43c5-37c7-4322-9392-8b2e5d9aa365.jpg",
+      "PackagePath": "staticwebassets\\images\\books\\77bb43c5-37c7-4322-9392-8b2e5d9aa365.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\780646c5-d026-43a0-9d7f-71084305753a.png",
+      "PackagePath": "staticwebassets\\images\\books\\780646c5-d026-43a0-9d7f-71084305753a.png"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\7c3a2122-0aaa-41bd-8cb3-1bf3937a8712.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\7c3a2122-0aaa-41bd-8cb3-1bf3937a8712.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\7fc11dbe-d4a0-4b72-89e1-735368e8a17b.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\7fc11dbe-d4a0-4b72-89e1-735368e8a17b.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\92a64dda-b7d0-45b6-9ce1-e122bc8bffae.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\92a64dda-b7d0-45b6-9ce1-e122bc8bffae.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\9685363c-8b5b-4513-8581-cf4e987b65cc.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\9685363c-8b5b-4513-8581-cf4e987b65cc.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\97410d82-1b07-4a1e-8d2b-c476b9e9f4f0.PNG",
+      "PackagePath": "staticwebassets\\images\\books\\97410d82-1b07-4a1e-8d2b-c476b9e9f4f0.PNG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\ad249e14-2c86-4afd-b0d3-c8d05c4c028b.PNG",
+      "PackagePath": "staticwebassets\\images\\books\\ad249e14-2c86-4afd-b0d3-c8d05c4c028b.PNG"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif",
       "PackagePath": "staticwebassets\\images\\books\\b03ae09e-6978-4d38-8ea1-d88a9d95311e.jfif"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\b725b6c1-254e-4bb1-b3b0-14f8bbbb688b.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\b725b6c1-254e-4bb1-b3b0-14f8bbbb688b.JPG"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\bea6111b-525a-43f8-9a92-bedb8fcbeabf.jfif",
       "PackagePath": "staticwebassets\\images\\books\\bea6111b-525a-43f8-9a92-bedb8fcbeabf.jfif"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\cf8fbd45-07ed-404f-87a7-2220ef6c99dc.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\cf8fbd45-07ed-404f-87a7-2220ef6c99dc.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\def88e66-f627-4008-9069-c0ec2f4e846d.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\def88e66-f627-4008-9069-c0ec2f4e846d.JPG"
     },
     {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\ef3885b3-bebc-4322-88e4-b7d8c90ce50f.jfif",
@@ -41,8 +153,28 @@
       "PackagePath": "staticwebassets\\images\\books\\f02582d0-024c-4ae8-8147-0b426617a736.PNG"
     },
     {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\f1816b58-63b8-40cd-b313-a5ac79fc7aff.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\f1816b58-63b8-40cd-b313-a5ac79fc7aff.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\f94b6cc8-9d33-4e8e-ae4d-012cb70f7f0b.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\f94b6cc8-9d33-4e8e-ae4d-012cb70f7f0b.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\f95f3a4b-f57d-47a6-a7a8-2913e951c6a0.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\f95f3a4b-f57d-47a6-a7a8-2913e951c6a0.JPG"
+    },
+    {
       "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\fc0db5fd-a675-4ab4-90f6-366b05dd31ba.PNG",
       "PackagePath": "staticwebassets\\images\\books\\fc0db5fd-a675-4ab4-90f6-366b05dd31ba.PNG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\fef3d1c4-57ae-479b-a5f1-6ea05cb7a885.JPG",
+      "PackagePath": "staticwebassets\\images\\books\\fef3d1c4-57ae-479b-a5f1-6ea05cb7a885.JPG"
+    },
+    {
+      "Id": "C:\\Users\\Dell\\Desktop\\ASP.NET core api web\\LibraryManagement\\wwwroot\\images\\books\\ff5a294f-e4e2-452f-8be2-575a4a0ee343.png",
+      "PackagePath": "staticwebassets\\images\\books\\ff5a294f-e4e2-452f-8be2-575a4a0ee343.png"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LibraryManagement.Microsoft.AspNetCore.StaticWebAssets.props",

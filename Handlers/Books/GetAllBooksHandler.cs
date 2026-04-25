@@ -10,6 +10,7 @@ namespace LibraryManagement.CQRS.Handlers.Book.Queries
     public class GetAllBooksHandler : IRequestHandler<GetAllBooksQuery, List<BookSimpleDTO>>
     {
         private readonly IBookRepository _bookRepository;
+        
 
         public GetAllBooksHandler(IBookRepository bookRepository)
         {

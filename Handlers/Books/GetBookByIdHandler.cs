@@ -31,10 +31,15 @@ namespace LibraryManagement.CQRS.Handlers.Book.Queries
                 IsAvailable = b.IsAvailable,
                 AuthorId = b.AuthorId,
                 AuthorName = b.Author?.Name,
+                PageNumber = b.PageNumber,
+                Language = b.Language,
+                PublishDate = b.PublishDate,
                 Categories = b.BookCategories.Select(bc => bc.Category.Name).ToList(),
                 Reviews = b.Reviews.Select(r => new ReviewDTO
                 {
                     Id = r.Id,
+                    BookId = r.BookId,
+                    UserId = r.UserId,
                     Comment = r.Comment,
                     Rating = r.Rating,
                 }).ToList(),
@@ -47,8 +52,13 @@ namespace LibraryManagement.CQRS.Handlers.Book.Queries
                     User = new UserSimpleDTO
                     {
                         Id = r.User.Id,
-                        UserName = r.User.UserName
+                        UserName = r.User.UserName,
+                        Email = r.User.Email,
+                        PhoneNumber = r.User.PhoneNumber
+
+
                     },
+                   
                 }).ToList()
             };
         }

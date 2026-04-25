@@ -19,6 +19,7 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- 1. إعداد الـ CORS ---
+// مهم جداً للموبايل والويب عشان ما يرفض الطلبات
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -35,9 +36,12 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-// --- 3. قاعدة البيانات ---
+// --- 3. قاعدة البيانات (التعديل للسيكول سيرفر) ---
+// تأكدي إنك غيرتي DefaultConnection في appsettings.json لـ myCon
+var connectionString = builder.Configuration.GetConnectionString("myCon");
 builder.Services.AddDbContext<AppDBcontext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString)); 
+
 // --- 4. Swagger & JWT ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenJwtAuth();
@@ -78,7 +82,6 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 .AddEntityFrameworkStores<AppDBcontext>()
 .AddDefaultTokenProviders();
 
-// تخصيص الـ 401 Unauthorized بدلاً من تحويل الـ Login
 builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, options =>
 {
     options.Events.OnRedirectToLogin = context =>
@@ -95,6 +98,7 @@ var app = builder.Build();
 // --- 7. Seed Data (Roles) ---
 using (var scope = app.Services.CreateScope())
 {
+    // هنا بيصير الـ Check على الـ ConnectionString، لازم يكون صح في appsettings
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     string[] roles = { "User", "Admin" };
     foreach (var role in roles)
@@ -106,7 +110,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// --- 8. الـ Middleware Pipeline (الترتيب هنا حرج جداً) ---
+// --- 8. الـ Middleware Pipeline ---
 
 if (app.Environment.IsDevelopment())
 {
@@ -114,26 +118,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// أ. تفعيل الملفات الثابتة (الصور) - يجب أن تكون قبل الـ Auth
-app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
-    RequestPath = ""
-});
+app.UseStaticFiles(); 
 
 app.UseRouting();
+app.UseCors("AllowAll"); // لازم يكون قبل الـ Auth
 
-// ب. تفعيل الـ CORS
-app.UseCors("AllowAll");
-
-// ج. تفعيل الحماية
 app.UseAuthentication();
 app.UseAuthorization();
 
-// د. تعريف الـ Controllers
 app.MapControllers();
 
-// هـ. تشغيل السيرفر ليقبل الاتصال من الموبايل (عبر الـ IP)
+// --- تشغيل السيرفر ليقبل الاتصال من أي IP (مهم للموبايل) ---
 app.Run("http://0.0.0.0:5000");

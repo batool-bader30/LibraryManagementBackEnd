@@ -59,7 +59,12 @@ namespace LibraryManagement.CQRS.Handlers.Book.Commands
                 ImageUrl = dbImagePath, // ✅ نستخدم المسار الجديد هنا
                 AuthorId = request.Book.AuthorId,
                 IsAvailable = true,
-                BookCategories = new List<BookCategoryModel>()
+                BookCategories = new List<BookCategoryModel>(),
+                PageNumber = request.Book.PageNumber,
+                Language = request.Book.Language,
+                PublishDate = request.Book.PublishDate,
+
+
             };
 
             // ربط الكاتيجوريز

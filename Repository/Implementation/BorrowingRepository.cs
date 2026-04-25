@@ -51,9 +51,10 @@ namespace LibraryManagement.Repository.Implementation
         public async Task<List<BorrowingModel>> GetAllBorrowingsAsync()
         {
             return await _context.Borrowings
-        .Include(b => b.Book)
-        .Include(b => b.User)
-        .ToListAsync();
+          .Include(b => b.User)
+          .Include(b => b.Book)
+              .ThenInclude(book => book.Author) // هذا السطر سيجلب بيانات المؤلف المرتبط بالكتاب
+          .ToListAsync();
         }
 
         public async Task<BorrowingModel?> GetBorrowingByIdAsync(int id)
@@ -75,8 +76,9 @@ namespace LibraryManagement.Repository.Implementation
         public async Task<List<BorrowingModel>> GetBorrowingsByUserIdAsync(string userId)
         {
             return await _context.Borrowings
-                .Include(b => b.Book)
-                .Include(b => b.User)
+                .Include(b => b.User)          // جلب بيانات المستخدم
+                .Include(b => b.Book)          // جلب بيانات الكتاب
+                    .ThenInclude(book => book.Author) // !!! السطر الناقص: جلب بيانات المؤلف التابع للكتاب
                 .Where(b => b.UserId == userId)
                 .ToListAsync();
         }

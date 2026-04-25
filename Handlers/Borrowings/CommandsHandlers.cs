@@ -36,6 +36,7 @@ namespace LibraryManagement.command
                 BookId = request.Borrowing.BookId,
                 UserId = request.Borrowing.UserId,
                 BorrowDate = DateTime.UtcNow,
+                ReturnDate=request.Borrowing.ReturnDate,
                 Status = BorrowStatus.Borrowing
             };
 
